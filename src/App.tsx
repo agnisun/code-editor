@@ -6,13 +6,15 @@ import { Toolsbar } from '@components/Toolsbar/Toolsbar'
 
 export const App = () => {
     return (
-        <Box>
+        <>
             <Titlebar />
-            <Toolsbar />
-            <Flex h={'100vh'} w={'100vw'} overflow={'hidden'}>
-                <Navbar />
-                <Editor />
-            </Flex>
-        </Box>
+            <Box h={'100vh'} pt={'40px'}>
+                <Toolsbar />
+                <Flex w={'100vw'} overflow={'hidden'} h={'100%'}>
+                    <Navbar />
+                    <Editor />
+                </Flex>
+            </Box>
+        </>
     )
 }

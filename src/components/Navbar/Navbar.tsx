@@ -1,16 +1,20 @@
 import { Box } from '@chakra-ui/react'
 import { ViewDrawer } from '@components/ViewDrawer/ViewDrawer'
-import { MouseEvent as MouseEventReact, useState } from 'react'
+import { MouseEvent as MouseEventReact } from 'react'
 import { useResizeNavbar } from '@hooks/useResizeNavbar'
 import { NavbarTools } from '@components/Navbar/NavbarTools'
 import { useAtom } from 'jotai'
 import { isNavbarHideAtom } from '@state/navbar'
+import { NavbarFiles } from './NavbarFiles'
 
-export interface IFile {}
+export interface IFile {
+    id: string
+    name: string
+    kind: 'file' | 'directory'
+    path: string
+}
 
 export const Navbar = () => {
-    const [projectName, setProjectName] = useState<string>('')
-    const [files, setFiles] = useState<IFile[]>([])
     const { isResizing, startResizing, navbarWidth, navbarRef } = useResizeNavbar()
     const [isNavbarHide] = useAtom(isNavbarHideAtom)
 
@@ -34,7 +38,7 @@ export const Navbar = () => {
             onMouseDown={handleOnMouseDown}
         >
             <NavbarTools />
-            <Box>Files</Box>
+            {!isNavbarHide && <NavbarFiles />}
             <ViewDrawer startResizing={startResizing} />
         </Box>
     )

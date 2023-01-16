@@ -6,11 +6,28 @@ import { HiMinus, HiPlus } from 'react-icons/hi'
 import { useAtom } from 'jotai'
 import { isNavbarHideAtom, navbarWidthAtom } from '@state/navbar'
 import { useCallback, useMemo } from 'react'
+import { open } from '@tauri-apps/api/dialog'
+import { projectDirectoriesAtom, projectFilesAtom, projectPathAtom } from '@state/source'
+import { readDirectory } from '@utils/filesys'
 
 export const NavbarTools = () => {
+    const [, setProjectDirectories] = useAtom(projectDirectoriesAtom)
+    const [, setProjectFiles] = useAtom(projectFilesAtom)
+    const [, setProjectPath] = useAtom(projectPathAtom)
     const [, setNavbarWidth] = useAtom(navbarWidthAtom)
     const [isNavbarHide, setIsNavbarHide] = useAtom(isNavbarHideAtom)
-    const loadFile = useCallback(async () => {}, [])
+    const loadFile = useCallback(async () => {
+        const selected = await open({
+            directory: true,
+        })
+
+        if (!selected) return
+
+        setProjectPath(selected as string)
+        const [files, directories] = await readDirectory(selected + '/')
+        setProjectFiles(files)
+        setProjectDirectories(directories)
+    }, [])
     const expandDirectories = useCallback(() => {}, [])
     const collapseDirectories = useCallback(() => {}, [])
     const showNavbar = useCallback(() => {

@@ -1,16 +1,19 @@
-#![cfg_attr(
+﻿#![cfg_attr(
     all(not(debug_assertions), target_os = "windows"),
     windows_subsystem = "windows"
 )]
 
+mod fs;
+
 #[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
+fn open_folder(dir_path: &str) -> String {
+    let files = fs::read_directory(dir_path);
+    files
 }
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet])
+        .invoke_handler(tauri::generate_handler![open_folder])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
