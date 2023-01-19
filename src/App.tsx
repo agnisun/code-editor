@@ -3,6 +3,7 @@ import { Editor } from '@components/Editor/Editor'
 import { Navbar } from '@components/Navbar/Navbar'
 import { Titlebar } from '@components/Titlebar/Titlebar'
 import { Toolsbar } from '@components/Toolsbar/Toolsbar'
+import { Loader } from '@components/common/Loader'
 
 export const App = () => {
     return (
@@ -15,6 +16,7 @@ export const App = () => {
                     <Editor />
                 </Flex>
             </Box>
+            <Loader />
         </>
     )
 }

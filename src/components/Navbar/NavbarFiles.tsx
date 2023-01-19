@@ -1,21 +1,23 @@
-import { List } from '@chakra-ui/react'
-import { useAtom } from 'jotai'
-import { projectDirectoriesAtom, projectFilesAtom } from '@state/source'
+import { Box } from '@chakra-ui/react'
 import { NavbarDirectory } from '@components/Navbar/NavbarDirectory'
 import { NavbarFile } from '@components/Navbar/NavbarFile'
+import { IFile } from './Navbar'
+import { FC } from 'react'
 
-export const NavbarFiles = () => {
-    const [directories] = useAtom(projectDirectoriesAtom)
-    const [files] = useAtom(projectFilesAtom)
+interface NavbarFilesProps {
+    files: IFile[]
+}
 
+export const NavbarFiles:FC<NavbarFilesProps> = ({ files }) => {
     return (
-        <List overflowY={'auto'} h={'calc(100vh - 131px)'}>
-            {directories.map((directory) => (
-                <NavbarDirectory key={directory.id} directory={directory} />
-            ))}
-            {files.map((file) => (
-                <NavbarFile key={file.id} file={file} />
-            ))}
-        </List>
+        <Box>
+            {files.map((file) => {
+                if (file.kind === 'directory') {
+                    return <NavbarDirectory key={file.id} directory={file} files={file.children} />
+                }
+
+                return <NavbarFile key={file.id} file={file} />
+            })}
+        </Box>
     )
 }
