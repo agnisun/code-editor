@@ -1,12 +1,12 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { useAtom } from 'jotai'
-import { isNavbarHideAtom, navbarWidthAtom } from '@state/navbar'
+import { isNavbarHideAtom, isResizingAtom, navbarWidthAtom } from '@state/navbar'
 
 export const useResizeNavbar = () => {
     const navbarRef = useRef<HTMLDivElement>(null)
     const [navbarWidth, setNavbarWidth] = useAtom(navbarWidthAtom)
     const [, setIsNavbarHide] = useAtom(isNavbarHideAtom)
-    const [isResizing, setIsResizing] = useState<boolean>(false)
+    const [isResizing, setIsResizing] = useAtom(isResizingAtom)
 
     const startResizing = useCallback(() => {
         document.body.style.cursor = 'ew-resize'

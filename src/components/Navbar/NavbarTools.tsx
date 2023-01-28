@@ -26,6 +26,7 @@ export const NavbarTools = () => {
         if (!isLoading) setIsLoading(true)
         const files = await readDirectory(selected + '/')
         setProjectFiles(files)
+        setProjectPath(selected as string)
         setIsLoading(false)
     }, [])
     const expandDirectories = useCallback(() => {}, [])

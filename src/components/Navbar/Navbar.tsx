@@ -4,7 +4,7 @@ import { MouseEvent as MouseEventReact } from 'react'
 import { useResizeNavbar } from '@hooks/useResizeNavbar'
 import { NavbarTools } from '@components/Navbar/NavbarTools'
 import { useAtom } from 'jotai'
-import { isNavbarHideAtom } from '@state/navbar'
+import { isNavbarHideAtom, isResizingAtom } from '@state/navbar'
 import { NavbarFiles } from './NavbarFiles'
 import { projectFilesAtom } from '@state/source'
 
@@ -17,9 +17,10 @@ export interface IFile {
 }
 
 export const Navbar = () => {
-    const { isResizing, startResizing, navbarWidth, navbarRef } = useResizeNavbar()
+    const { startResizing, navbarWidth, navbarRef } = useResizeNavbar()
     const [files] = useAtom(projectFilesAtom)
     const [isNavbarHide] = useAtom(isNavbarHideAtom)
+    const [isResizing] = useAtom(isResizingAtom)
 
     const handleOnMouseDown = (e: MouseEventReact) => {
         if (isResizing) {
@@ -41,7 +42,7 @@ export const Navbar = () => {
             onMouseDown={handleOnMouseDown}
         >
             <NavbarTools />
-            <Box display={isNavbarHide ? 'none' : 'block'} overflowY={'auto'} h={'calc(100vh - 131px)'} p={'5px 10px'}>
+            <Box display={isNavbarHide ? 'none' : 'block'} h={'calc(100vh - 131px)'}>
                 <NavbarFiles files={files} />
             </Box>
             <ViewDrawer startResizing={startResizing} />
