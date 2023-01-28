@@ -1,32 +1,37 @@
 import { NavbarDirectory } from '@components/Navbar/NavbarDirectory'
 import { NavbarFile } from '@components/Navbar/NavbarFile'
-import { IFile } from './Navbar'
-import { CSSProperties, FC, useCallback } from 'react'
+import { CSSProperties, useCallback, useMemo } from 'react'
 import { FixedSizeList } from 'react-window'
 import AutoSizer from 'react-virtualized-auto-sizer'
+import { useAtom } from 'jotai'
+import { projectAtom } from '@state/source'
+import { Directory, File } from '@utils/filesys'
 
-interface NavbarFilesProps {
-    files: IFile[]
-}
+export const NavbarFiles = () => {
+    const [project] = useAtom(projectAtom)
+    const { files, directories } = project
 
-export const NavbarFiles: FC<NavbarFilesProps> = ({ files }) => {
+    const projectFiles = useMemo<(File | Directory)[]>(() => {
+        return [].concat(directories as never[], files as never[])
+    }, [project])
+
     const NavbarRow = useCallback(
         ({ index, style }: { index: number; style: CSSProperties }) => {
-            const file = files[index]
+            const file = projectFiles[index]
 
             if (file.kind === 'directory') {
-                return <NavbarDirectory style={style} key={file.id} directory={file} files={file.children} />
+                return <NavbarDirectory style={style} key={file.id} directory={file} />
             }
 
             return <NavbarFile key={file.id} file={file} style={style} />
         },
-        [files]
+        [project]
     )
 
     return (
         <AutoSizer>
             {({ height, width }: { height: number; width: number }) => (
-                <FixedSizeList width={width} height={height} itemSize={32} itemCount={files.length}>
+                <FixedSizeList width={width} height={height} itemSize={32} itemCount={projectFiles.length}>
                     {NavbarRow}
                 </FixedSizeList>
             )}

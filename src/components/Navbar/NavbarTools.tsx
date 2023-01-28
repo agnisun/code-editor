@@ -7,12 +7,11 @@ import { useAtom } from 'jotai'
 import { isNavbarHideAtom, navbarWidthAtom } from '@state/navbar'
 import { useCallback, useMemo } from 'react'
 import { open } from '@tauri-apps/api/dialog'
-import { isLoadingAtom, projectFilesAtom, projectPathAtom } from '@state/source'
+import { isLoadingAtom, projectAtom } from '@state/source'
 import { readDirectory } from '@utils/filesys'
 
 export const NavbarTools = () => {
-    const [, setProjectFiles] = useAtom(projectFilesAtom)
-    const [, setProjectPath] = useAtom(projectPathAtom)
+    const [, setProject] = useAtom(projectAtom)
     const [, setNavbarWidth] = useAtom(navbarWidthAtom)
     const [isNavbarHide, setIsNavbarHide] = useAtom(isNavbarHideAtom)
     const [isLoading, setIsLoading] = useAtom(isLoadingAtom)
@@ -22,11 +21,10 @@ export const NavbarTools = () => {
         })
 
         if (!selected) return
-        
+
         if (!isLoading) setIsLoading(true)
-        const files = await readDirectory(selected + '/')
-        setProjectFiles(files)
-        setProjectPath(selected as string)
+        const project = await readDirectory(selected + '/')
+        setProject(project)
         setIsLoading(false)
     }, [])
     const expandDirectories = useCallback(() => {}, [])

@@ -1,18 +1,16 @@
-import { IFile } from '@components/Navbar/Navbar'
 import { CSSProperties, FC, MouseEvent, useState } from 'react'
 import { Box, Flex, Icon } from '@chakra-ui/react'
 import { FcFolder } from 'react-icons/fc'
-import { NavbarFiles } from '@components/Navbar/NavbarFiles'
 import { useAtom } from 'jotai'
 import { isResizingAtom } from '@state/navbar'
+import { Directory } from '@utils/filesys'
 
 interface NavbarDirectoryProps {
-    directory: IFile
-    files: IFile[]
+    directory: Directory
     style: CSSProperties
 }
 
-export const NavbarDirectory: FC<NavbarDirectoryProps> = ({ directory, files, style }) => {
+export const NavbarDirectory: FC<NavbarDirectoryProps> = ({ directory, style }) => {
     const [isResizing] = useAtom(isResizingAtom)
     const [isVisible, setIsVisible] = useState<boolean>(false)
     const handleOnShow = async (e: MouseEvent<HTMLDivElement>) => {
@@ -37,7 +35,6 @@ export const NavbarDirectory: FC<NavbarDirectoryProps> = ({ directory, files, st
                     {directory.name}
                 </Box>
             </Flex>
-            <Box pl={'15px'}>{isVisible && <NavbarFiles files={files} />}</Box>
         </>
     )
 }

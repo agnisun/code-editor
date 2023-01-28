@@ -1,12 +1,12 @@
-import { IFile } from '@components/Navbar/Navbar'
 import { CSSProperties, FC } from 'react'
 import { Box, Flex } from '@chakra-ui/react'
 import { FileIcon } from '@components/common/FileIcon'
 import { useAtom } from 'jotai'
 import { isResizingAtom } from '@state/navbar'
+import { File } from '@utils/filesys'
 
 interface NavbarFileProps {
-    file: IFile
+    file: File
     style: CSSProperties
 }
 

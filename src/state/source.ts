@@ -1,6 +1,9 @@
 import { atom } from 'jotai'
-import { IFile } from '@components/Navbar/Navbar'
+import { Project } from '@utils/filesys'
 
-export const projectPathAtom = atom<string>('')
 export const isLoadingAtom = atom<boolean>(false)
-export const projectFilesAtom = atom<IFile[]>([])
+export const projectAtom = atom<Project>({
+    projectPath: '',
+    directories: [],
+    files: [],
+})

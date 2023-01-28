@@ -6,19 +6,9 @@ import { NavbarTools } from '@components/Navbar/NavbarTools'
 import { useAtom } from 'jotai'
 import { isNavbarHideAtom, isResizingAtom } from '@state/navbar'
 import { NavbarFiles } from './NavbarFiles'
-import { projectFilesAtom } from '@state/source'
-
-export interface IFile {
-    id: string
-    name: string
-    kind: 'file' | 'directory'
-    path: string
-    children: []
-}
 
 export const Navbar = () => {
     const { startResizing, navbarWidth, navbarRef } = useResizeNavbar()
-    const [files] = useAtom(projectFilesAtom)
     const [isNavbarHide] = useAtom(isNavbarHideAtom)
     const [isResizing] = useAtom(isResizingAtom)
 
@@ -43,7 +33,7 @@ export const Navbar = () => {
         >
             <NavbarTools />
             <Box display={isNavbarHide ? 'none' : 'block'} h={'calc(100vh - 131px)'}>
-                <NavbarFiles files={files} />
+                <NavbarFiles />
             </Box>
             <ViewDrawer startResizing={startResizing} />
         </Box>
