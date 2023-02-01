@@ -1,5 +1,6 @@
 import { FC } from 'react'
 import { ChakraProvider } from '@chakra-ui/react'
+import { Provider } from 'jotai'
 import { theme } from '@theme/theme'
 
 interface ProvidersProps {
@@ -8,8 +9,10 @@ interface ProvidersProps {
 
 export const Providers: FC<ProvidersProps> = ({ children }) => {
     return (
-        <ChakraProvider resetCSS={true} theme={theme}>
-            {children}
-        </ChakraProvider>
+        <Provider>
+            <ChakraProvider resetCSS={true} theme={theme}>
+                {children}
+            </ChakraProvider>
+        </Provider>
     )
 }

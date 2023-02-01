@@ -12,8 +12,8 @@ export interface Directory {
     path: string
     id: string
     children: Project
-    depth: number
     collapsed: boolean
+    depth: number
 }
 
 export interface File {
@@ -21,6 +21,11 @@ export interface File {
     kind: 'file'
     path: string
     id: string
+    depth: number
+}
+
+export const formatDirectory = (project: Project): (File | Directory)[] => {
+    return ([] as (File | Directory)[]).concat(project.directories, project.files)
 }
 
 export const readDirectory = (dirPath: string): Promise<Project> => {

@@ -1,5 +1,5 @@
 import { atom } from 'jotai'
-import { Project } from '@utils/filesys'
+import { Directory, File, Project } from '@utils/filesys'
 
 export const isLoadingAtom = atom<boolean>(false)
 export const projectAtom = atom<Project>({
@@ -7,3 +7,4 @@ export const projectAtom = atom<Project>({
     directories: [],
     files: [],
 })
+export const openedNodesAtom = atom<(File | Directory)[]>([])

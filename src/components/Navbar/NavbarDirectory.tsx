@@ -1,40 +1,33 @@
-import { CSSProperties, FC, MouseEvent, useState } from 'react'
-import { Box, Flex, Icon } from '@chakra-ui/react'
+import { CSSProperties, FC, MouseEvent } from 'react'
+import { Box, Icon } from '@chakra-ui/react'
 import { FcFolder } from 'react-icons/fc'
-import { useAtom } from 'jotai'
-import { isResizingAtom } from '@state/navbar'
 import { Directory } from '@utils/filesys'
+import { FileContainer } from '@components/common/FileContainer'
+import { useSource } from '@hooks/useSource'
 
 interface NavbarDirectoryProps {
     directory: Directory
-    style: CSSProperties
+    index: number
+    style?: CSSProperties
 }
 
-export const NavbarDirectory: FC<NavbarDirectoryProps> = ({ directory, style }) => {
-    const [isResizing] = useAtom(isResizingAtom)
-    const [isVisible, setIsVisible] = useState<boolean>(false)
-    const handleOnShow = async (e: MouseEvent<HTMLDivElement>) => {
-        e.stopPropagation()
+export const NavbarDirectory: FC<NavbarDirectoryProps> = ({ directory, index, style = undefined }) => {
+    const { handleExpand } = useSource()
 
-        setIsVisible(!isVisible)
+    const { depth, name } = directory
+    const handleOnClick = (e: MouseEvent<HTMLDivElement>) => {
+        e.stopPropagation()
+        handleExpand(directory, index)
     }
 
     return (
         <>
-            <Flex
-                alignItems={'center'}
-                gap={'5px'}
-                onClick={handleOnShow}
-                cursor={'pointer'}
-                _hover={!isResizing ? { color: '#9ca3af' } : undefined}
-                p={'5px'}
-                style={style}
-            >
+            <FileContainer onClick={handleOnClick} style={{ ...style, paddingLeft: `${depth ? depth * 20 : 5}px` }}>
                 <Icon as={FcFolder} />
                 <Box whiteSpace={'nowrap'} textOverflow={'ellipsis'} overflow={'hidden'}>
-                    {directory.name}
+                    {name}
                 </Box>
-            </Flex>
+            </FileContainer>
         </>
     )
 }

@@ -1,26 +1,25 @@
 import { CSSProperties, FC } from 'react'
-import { Box, Flex } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import { FileIcon } from '@components/common/FileIcon'
-import { useAtom } from 'jotai'
-import { isResizingAtom } from '@state/navbar'
 import { File } from '@utils/filesys'
+import { FileContainer } from '@components/common/FileContainer'
 
 interface NavbarFileProps {
     file: File
-    style: CSSProperties
+    style?: CSSProperties
 }
 
-export const NavbarFile: FC<NavbarFileProps> = ({ file, style }) => {
-    const [isResizing] = useAtom(isResizingAtom)
+export const NavbarFile: FC<NavbarFileProps> = ({ file, style = undefined }) => {
+    const { depth, name } = file
 
     return (
-        <Box userSelect={isResizing ? 'none' : 'auto'} cursor={'pointer'} _hover={{ color: '#9ca3af' }} style={style}>
-            <Flex alignItems={'center'} gap={'5px'} p={'5px'}>
+        <>
+            <FileContainer style={{ ...style, paddingLeft: `${depth ? depth * 20 : 5}px` }}>
                 <FileIcon fileName={file.name} />
                 <Box whiteSpace={'nowrap'} textOverflow={'ellipsis'} overflow={'hidden'}>
-                    {file.name}
+                    {name}
                 </Box>
-            </Flex>
-        </Box>
+            </FileContainer>
+        </>
     )
 }

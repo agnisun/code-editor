@@ -1,40 +1,45 @@
+import { CSSProperties, useCallback } from 'react'
+import { useAtom } from 'jotai'
+import AutoSizer from 'react-virtualized-auto-sizer'
+import { FixedSizeList } from 'react-window'
+import { Box } from '@chakra-ui/react'
+import { isNavbarHideAtom } from '@state/navbar'
 import { NavbarDirectory } from '@components/Navbar/NavbarDirectory'
 import { NavbarFile } from '@components/Navbar/NavbarFile'
-import { CSSProperties, useCallback, useMemo } from 'react'
-import { FixedSizeList } from 'react-window'
-import AutoSizer from 'react-virtualized-auto-sizer'
-import { useAtom } from 'jotai'
-import { projectAtom } from '@state/source'
-import { Directory, File } from '@utils/filesys'
+import { openedNodesAtom } from '@state/source'
 
 export const NavbarFiles = () => {
-    const [project] = useAtom(projectAtom)
-    const { files, directories } = project
-
-    const projectFiles = useMemo<(File | Directory)[]>(() => {
-        return [].concat(directories as never[], files as never[])
-    }, [project])
+    const [isNavbarHide] = useAtom(isNavbarHideAtom)
+    const [openedNodes] = useAtom(openedNodesAtom)
 
     const NavbarRow = useCallback(
         ({ index, style }: { index: number; style: CSSProperties }) => {
-            const file = projectFiles[index]
+            const file = openedNodes[index]
 
             if (file.kind === 'directory') {
-                return <NavbarDirectory style={style} key={file.id} directory={file} />
+                return <NavbarDirectory index={index} directory={file} style={style} />
             }
 
-            return <NavbarFile key={file.id} file={file} style={style} />
+            return <NavbarFile file={file} style={style} />
         },
-        [project]
+        [openedNodes]
     )
 
     return (
-        <AutoSizer>
-            {({ height, width }: { height: number; width: number }) => (
-                <FixedSizeList width={width} height={height} itemSize={32} itemCount={projectFiles.length}>
-                    {NavbarRow}
-                </FixedSizeList>
-            )}
-        </AutoSizer>
+        <Box display={isNavbarHide ? 'none' : 'block'} h={'calc(100vh - 131px)'}>
+            <AutoSizer>
+                {({ height, width }) => (
+                    <FixedSizeList
+                        height={height}
+                        itemCount={openedNodes.length}
+                        itemSize={32}
+                        width={width}
+                        itemKey={(index) => openedNodes[index].id}
+                    >
+                        {NavbarRow}
+                    </FixedSizeList>
+                )}
+            </AutoSizer>
+        </Box>
     )
 }

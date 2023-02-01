@@ -17,8 +17,8 @@ pub struct Directory {
     path: String,
     id: String,
     children: Project,
+    collapsed: bool,
     depth: i32,
-    collapsed: bool
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -27,6 +27,7 @@ pub struct File {
     kind: String,
     path: String,
     id: String,
+    depth: i32,
 }
 
 pub fn read_directory(dir_path: &str) -> Project {
@@ -53,10 +54,10 @@ pub fn read_directory(dir_path: &str) -> Project {
                 name: file_name,
                 kind: file_kind,
                 path: file_path.to_owned(),
-                id: file_id,
+                id: file_id.to_owned(),
                 children: read_directory(&file_path),
-                depth: 0,
-                collapsed: false
+                collapsed: true,
+                depth: 0
             };
             
             directories.push(directory)
@@ -65,7 +66,8 @@ pub fn read_directory(dir_path: &str) -> Project {
                 name: file_name,
                 kind: file_kind,
                 path: file_path,
-                id:file_id
+                id:file_id,
+                depth: 0
             };
             
             files.push(file)
@@ -75,6 +77,6 @@ pub fn read_directory(dir_path: &str) -> Project {
     Project {
         project_path: dir_path.to_owned(),
         directories,
-        files
+        files,
     }
 }

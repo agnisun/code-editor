@@ -5,7 +5,7 @@ import { useResizeNavbar } from '@hooks/useResizeNavbar'
 import { NavbarTools } from '@components/Navbar/NavbarTools'
 import { useAtom } from 'jotai'
 import { isNavbarHideAtom, isResizingAtom } from '@state/navbar'
-import { NavbarFiles } from './NavbarFiles'
+import { NavbarFiles } from '@components/Navbar/NavbarFiles'
 
 export const Navbar = () => {
     const { startResizing, navbarWidth, navbarRef } = useResizeNavbar()
@@ -32,9 +32,7 @@ export const Navbar = () => {
             onMouseDown={handleOnMouseDown}
         >
             <NavbarTools />
-            <Box display={isNavbarHide ? 'none' : 'block'} h={'calc(100vh - 131px)'}>
-                <NavbarFiles />
-            </Box>
+            <NavbarFiles />
             <ViewDrawer startResizing={startResizing} />
         </Box>
     )

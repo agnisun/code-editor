@@ -1,17 +1,19 @@
 import { Box, Flex, Icon, IconButton } from '@chakra-ui/react'
 import { AiOutlineFolderOpen } from 'react-icons/ai'
-import { MdExpand } from 'react-icons/md'
 import { BsArrowsCollapse } from 'react-icons/bs'
 import { HiMinus, HiPlus } from 'react-icons/hi'
 import { useAtom } from 'jotai'
 import { isNavbarHideAtom, navbarWidthAtom } from '@state/navbar'
 import { useCallback, useMemo } from 'react'
 import { open } from '@tauri-apps/api/dialog'
-import { isLoadingAtom, projectAtom } from '@state/source'
-import { readDirectory } from '@utils/filesys'
+import { isLoadingAtom, openedNodesAtom, projectAtom } from '@state/source'
+import { formatDirectory, readDirectory } from '@utils/filesys'
+import { useSource } from '@hooks/useSource'
 
 export const NavbarTools = () => {
+    const { collapseAllDirectories } = useSource()
     const [, setProject] = useAtom(projectAtom)
+    const [, setOpenedNodes] = useAtom(openedNodesAtom)
     const [, setNavbarWidth] = useAtom(navbarWidthAtom)
     const [isNavbarHide, setIsNavbarHide] = useAtom(isNavbarHideAtom)
     const [isLoading, setIsLoading] = useAtom(isLoadingAtom)
@@ -25,10 +27,9 @@ export const NavbarTools = () => {
         if (!isLoading) setIsLoading(true)
         const project = await readDirectory(selected + '/')
         setProject(project)
+        setOpenedNodes(formatDirectory(project))
         setIsLoading(false)
     }, [])
-    const expandDirectories = useCallback(() => {}, [])
-    const collapseDirectories = useCallback(() => {}, [])
     const showNavbar = useCallback(() => {
         setNavbarWidth(190)
         setIsNavbarHide(false)
@@ -46,17 +47,12 @@ export const NavbarTools = () => {
                 icon: isNavbarHide ? HiPlus : AiOutlineFolderOpen,
             },
             {
-                ariaLabel: 'Expand directories',
-                onClick: expandDirectories,
-                icon: MdExpand,
-            },
-            {
                 ariaLabel: 'Collapse directories',
-                onClick: collapseDirectories,
+                onClick: collapseAllDirectories,
                 icon: BsArrowsCollapse,
             },
         ],
-        [isNavbarHide]
+        [isNavbarHide, collapseAllDirectories]
     )
 
     return (
