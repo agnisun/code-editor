@@ -13,8 +13,8 @@ interface NavbarDirectoryProps {
 
 export const NavbarDirectory: FC<NavbarDirectoryProps> = ({ directory, index, style = undefined }) => {
     const { handleExpand } = useSource()
-
     const { depth, name } = directory
+
     const handleOnClick = (e: MouseEvent<HTMLDivElement>) => {
         e.stopPropagation()
         handleExpand(directory, index)
@@ -22,7 +22,11 @@ export const NavbarDirectory: FC<NavbarDirectoryProps> = ({ directory, index, st
 
     return (
         <>
-            <FileContainer onClick={handleOnClick} style={{ ...style, paddingLeft: `${depth ? depth * 20 : 5}px` }}>
+            <FileContainer
+                file={directory}
+                onClick={handleOnClick}
+                style={{ ...style, paddingLeft: `${depth ? depth * 20 : 5}px` }}
+            >
                 <Icon as={FcFolder} />
                 <Box whiteSpace={'nowrap'} textOverflow={'ellipsis'} overflow={'hidden'}>
                     {name}

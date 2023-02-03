@@ -31,7 +31,8 @@
     },
     "ignorePatterns": [
         "node_modules/",
-        "src/assets/**"
+        "src/assets/**",
+        "src/**/*.css"
     ],
     "settings": {
         "react": {

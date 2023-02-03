@@ -17,6 +17,7 @@
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@tauri-apps/api": "^1.2.0",
+    "codemirror": "^6.0.1",
     "framer-motion": "^8.4.2",
     "jotai": "^1.13.0",
     "nanoid": "^4.0.0",

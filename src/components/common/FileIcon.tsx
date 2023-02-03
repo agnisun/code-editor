@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { CSSProperties, FC } from 'react'
 import tsx from '@img/icons/tsx.svg'
 import jsx from '@img/icons/jsx.svg'
 import js from '@img/icons/js.svg'
@@ -19,6 +19,7 @@ interface Icons {
 
 interface FileIconProps {
     fileName: string
+    style?: CSSProperties
 }
 
 const icons: Icons = {
@@ -46,13 +47,16 @@ const icons: Icons = {
     vue,
 }
 
-export const FileIcon: FC<FileIconProps> = ({ fileName }) => {
+export const FileIcon: FC<FileIconProps> = ({
+    fileName,
+    style = { width: '18px', userSelect: 'none', pointerEvents: 'none', flexShrink: 0 },
+}) => {
     const lastDotIndex = fileName.lastIndexOf('.')
     const ext = lastDotIndex !== -1 ? fileName.slice(lastDotIndex + 1).toLowerCase() : 'NONE'
 
     if (icons[ext as keyof Icons]) {
-        return <img alt={''} src={icons[ext]} style={{ width: '16px' }} />
+        return <img alt={''} src={icons[ext]} style={style} />
     }
 
-    return <img style={{ width: '16px' }} alt={''} src={annotate} />
+    return <img alt={''} src={annotate} style={style} />
 }

@@ -1,6 +1,6 @@
 import { Box } from '@chakra-ui/react'
 import { ViewDrawer } from '@components/ViewDrawer/ViewDrawer'
-import { MouseEvent as MouseEventReact } from 'react'
+import { MouseEvent, useCallback } from 'react'
 import { useResizeNavbar } from '@hooks/useResizeNavbar'
 import { NavbarTools } from '@components/Navbar/NavbarTools'
 import { useAtom } from 'jotai'
@@ -12,14 +12,17 @@ export const Navbar = () => {
     const [isNavbarHide] = useAtom(isNavbarHideAtom)
     const [isResizing] = useAtom(isResizingAtom)
 
-    const handleOnMouseDown = (e: MouseEventReact) => {
-        if (isResizing) {
-            e.preventDefault()
-            return
-        }
+    const handleOnMouseDown = useCallback(
+        (e: MouseEvent) => {
+            if (isResizing) {
+                e.preventDefault()
+                return
+            }
 
-        return true
-    }
+            return true
+        },
+        [isResizing]
+    )
 
     return (
         <Box

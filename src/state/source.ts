@@ -8,3 +8,5 @@ export const projectAtom = atom<Project>({
     files: [],
 })
 export const openedNodesAtom = atom<(File | Directory)[]>([])
+export const selectedFilesAtom = atom<File[]>([])
+export const historyTabsAtom = atom<File[]>([])
