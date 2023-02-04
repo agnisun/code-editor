@@ -12,14 +12,15 @@ interface FileContainerProps extends FlexProps {
 export const FileContainer: FC<FileContainerProps> = ({ children, style, file, ...props }) => {
     const [isResizing] = useAtom(isResizingAtom)
     const { selectedFile } = useSource()
+    const isSelected = selectedFile.id === file.id
 
     return (
         <Flex
             alignItems={'center'}
             gap={'5px'}
             cursor={'pointer'}
-            _hover={selectedFile.id !== file.id && !isResizing ? { background: 'rgba(156, 163, 175, .5)' } : undefined}
-            background={selectedFile.id === file.id ? 'rgba(156, 163, 175)' : 'transparent'}
+            _hover={!isSelected && !isResizing ? { background: 'rgba(55, 55, 61, .5)' } : undefined}
+            background={isSelected ? '#37373D' : 'transparent'}
             p={'5px'}
             style={style}
             {...props}

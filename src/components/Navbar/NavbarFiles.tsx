@@ -35,6 +35,7 @@ export const NavbarFiles = () => {
                         itemSize={32}
                         width={width}
                         itemKey={(index) => openedNodes[index].id}
+                        className={'navbar-scroll'}
                     >
                         {NavbarRow}
                     </FixedSizeList>

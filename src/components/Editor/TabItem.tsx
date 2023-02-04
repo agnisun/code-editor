@@ -12,6 +12,7 @@ interface TabItemProps {
 export const TabItem: FC<TabItemProps> = ({ file }) => {
     const { name, id } = file
     const { selectFile, closeFile, selectedFile } = useSource()
+    const isSelected = selectedFile.id === id
 
     const handleSelectFile = () => {
         selectFile(file, true)
@@ -24,25 +25,18 @@ export const TabItem: FC<TabItemProps> = ({ file }) => {
 
     return (
         <Flex
+            flexShrink={0}
             alignItems={'center'}
             onClick={handleSelectFile}
             minW={'120px'}
             maxW={'240px'}
-            p={'5px 30px 5px 8px'}
+            p={'10px 30px 5px 8px'}
             h={'100%'}
             position={'relative'}
             gap={'5px'}
             fontSize={'20px'}
-            _before={{
-                content: "''",
-                display: selectedFile.id === id ? 'block' : 'none',
-                position: 'absolute',
-                bottom: '0',
-                left: '0',
-                width: '100%',
-                height: '4px',
-                background: 'blue',
-            }}
+            background={isSelected ? '#111' : 'transparent'}
+            color={isSelected ? '#fff' : 'rgba(255,255,255, 0.7)'}
         >
             <FileIcon fileName={name} />
             <Box userSelect={'none'} whiteSpace={'nowrap'} textOverflow={'ellipsis'} overflow={'hidden'}>
