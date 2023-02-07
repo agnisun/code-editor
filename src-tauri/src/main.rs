@@ -16,9 +16,15 @@ fn open_folder(dir_path: &str) -> String {
     files_str
 }
 
+#[tauri::command]
+fn get_file_content(file_path: &str) -> String {
+    let content = fs::read_file(file_path);
+    content
+}
+
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![open_folder])
+        .invoke_handler(tauri::generate_handler![open_folder, get_file_content])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

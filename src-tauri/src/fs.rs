@@ -80,3 +80,8 @@ pub fn read_directory(dir_path: &str) -> Project {
         files,
     }
 }
+
+pub fn read_file(path: &str) -> String {
+    let contents = fs::read_to_string(path).expect("ERROR");
+    contents
+}

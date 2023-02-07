@@ -8,7 +8,6 @@ export const theme = extendTheme({
                 fontSize: '18px',
                 lineHeight: '1.2',
                 fontFamily: 'Roboto',
-                overflow: 'hidden',
                 color: '#fff',
             },
         },

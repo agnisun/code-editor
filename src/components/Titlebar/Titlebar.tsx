@@ -35,16 +35,7 @@ export const Titlebar = () => {
     ]
 
     return (
-        <Flex
-            pos={'fixed'}
-            top={0}
-            left={0}
-            w={'100%'}
-            justifyContent={'space-between'}
-            alignItems={'center'}
-            fontSize={'.9rem'}
-            bg={'#111'}
-        >
+        <Flex w={'100%'} justifyContent={'space-between'} alignItems={'center'} fontSize={'.9rem'} bg={'#111'}>
             <Box px={'15px'}>Code Editor</Box>
             <Flex justifyContent={'space-between'} alignItems={'center'}>
                 {appWindowIcons.map(({ icon, ariaLabel, onClick }, i) => (

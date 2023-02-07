@@ -36,3 +36,11 @@ export const readDirectory = (dirPath: string): Promise<Project> => {
         })
     })
 }
+
+export const readFile = (filePath: string): Promise<string> => {
+    return new Promise((resolve) => {
+        invoke('get_file_content', { filePath }).then((data) => {
+            resolve(data as string)
+        })
+    })
+}
