@@ -7,7 +7,7 @@ mod fs;
 
 #[tauri::command]
 fn open_folder(dir_path: &str) -> String {
-    let files = fs::read_directory(dir_path);
+    let files = fs::read_directory(&dir_path);
     let files_str = match serde_json::to_string(&files) {
         Ok(str) => str,
         Err(error) => panic!("Problem opening the file: {:?}", error),

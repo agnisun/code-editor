@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useAtom } from 'jotai'
 import { historyTabsAtom, openedNodesAtom, projectAtom, selectedFilesAtom } from '@state/source'
-import { Directory, File, formatDirectory } from '@utils/filesys'
+import { Directory, File, formatDirectory, readDirectory } from '@utils/filesys'
 
 export const useSource = () => {
     const [selectedFiles, setSelectedFiles] = useAtom(selectedFilesAtom)
@@ -20,38 +20,39 @@ export const useSource = () => {
         [historyTabs]
     )
 
-    const expandDirectory = useCallback(
-        (directory: Directory, index: number) => {
-            const children = formatDirectory(directory.children).map((file) => ({
+    const expandDirectory = useCallback(async (directory: Directory, index: number) => {
+        const children = await readDirectory(directory.path)
+        directory.collapsed = false
+        setOpenedNodes((openedNodes) => {
+            const start = openedNodes.slice(0, index + 1)
+            const end = openedNodes.slice(index + 1)
+            const formattedChildren = formatDirectory(children, (file) => ({
                 ...file,
                 depth: directory.depth + 1,
             }))
-            const res = JSON.parse(JSON.stringify(openedNodes))
 
-            res.splice(index + 1, 0, ...children)
-
-            res[index].collapsed = false
-            setOpenedNodes(res)
-        },
-        [openedNodes]
-    )
+            return start.concat(formattedChildren, end)
+        })
+    }, [])
 
     const collapseDirectory = useCallback(
         (directory: Directory, index: number) => {
-            const res = JSON.parse(JSON.stringify(openedNodes))
-            let nextNodeIndex = res.length
+            let nextNodeIndex = openedNodes.length
 
-            for (let i = index + 1; i < res.length; i++) {
-                if (res[i].depth <= directory.depth) {
+            for (let i = index + 1; i < openedNodes.length; i++) {
+                if (openedNodes[i].depth <= directory.depth) {
                     nextNodeIndex = i - 1
                     break
                 }
             }
 
-            res.splice(index + 1, nextNodeIndex - index)
+            directory.collapsed = true
+            setOpenedNodes((openedNodes) => {
+                const start = openedNodes.slice(0, index + 1)
+                const end = openedNodes.slice(nextNodeIndex + 1)
 
-            res[index].collapsed = true
-            setOpenedNodes(res)
+                return start.concat(end)
+            })
         },
         [openedNodes]
     )

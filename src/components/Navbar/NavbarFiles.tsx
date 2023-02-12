@@ -7,6 +7,7 @@ import { isNavbarHideAtom } from '@state/navbar'
 import { NavbarDirectory } from '@components/Navbar/NavbarDirectory'
 import { NavbarFile } from '@components/Navbar/NavbarFile'
 import { openedNodesAtom } from '@state/source'
+import { Directory, File } from '@utils/filesys'
 
 export const NavbarFiles = () => {
     const [isNavbarHide] = useAtom(isNavbarHideAtom)
@@ -17,10 +18,10 @@ export const NavbarFiles = () => {
             const file = openedNodes[index]
 
             if (file.kind === 'directory') {
-                return <NavbarDirectory index={index} directory={file} style={style} />
+                return <NavbarDirectory index={index} directory={file as Directory} style={style} />
             }
 
-            return <NavbarFile file={file} style={style} />
+            return <NavbarFile file={file as File} style={style} />
         },
         [openedNodes]
     )

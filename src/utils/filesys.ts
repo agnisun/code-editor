@@ -11,7 +11,6 @@ export interface Directory {
     kind: 'directory'
     path: string
     id: string
-    children: Project
     collapsed: boolean
     depth: number
 }
@@ -24,8 +23,37 @@ export interface File {
     depth: number
 }
 
-export const formatDirectory = (project: Project): (File | Directory)[] => {
-    return ([] as (File | Directory)[]).concat(project.directories, project.files)
+export type OmitDirectory = Omit<Directory, 'kind' | 'collapsed'>
+export interface FileNode extends OmitDirectory {
+    kind: 'file' | 'directory'
+    collapsed?: boolean
+}
+
+export const formatDirectory = (project: Project, callback?: (node: FileNode) => FileNode): FileNode[] => {
+    const res: FileNode[] = []
+    const { directories, files } = project
+
+    for (let i = 0; i < directories.length; i++) {
+        let directory = directories[i]
+
+        if (callback) {
+            directory = callback(directory) as Directory
+        }
+
+        res.push(directory)
+    }
+
+    for (let i = 0; i < files.length; i++) {
+        let file = files[i]
+
+        if (callback) {
+            file = callback(file) as File
+        }
+
+        res.push(file)
+    }
+
+    return res
 }
 
 export const readDirectory = (dirPath: string): Promise<Project> => {

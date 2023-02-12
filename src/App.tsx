@@ -6,7 +6,6 @@ import { Toolsbar } from '@components/Toolsbar/Toolsbar'
 import { Loader } from '@components/common/Loader'
 
 export const App = () => {
-    console.log('render')
     return (
         <>
             <Titlebar />
