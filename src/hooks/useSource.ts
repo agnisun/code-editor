@@ -105,7 +105,7 @@ export const useSource = () => {
             addToHistory()
             setSelectedFiles((prev) => [...prev, file])
         },
-        [selectedFile]
+        [selectedFile, selectedFiles]
     )
 
     const closeFile = useCallback((file: File) => {
