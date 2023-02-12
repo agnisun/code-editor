@@ -58,9 +58,17 @@ export const useSource = () => {
     )
 
     const collapseAllDirectories = useCallback(() => {
-        const formattedFiles = formatDirectory(project)
+        const formattedFiles = formatDirectory(project, (dir) => {
+            if (dir.kind === 'directory') {
+                dir.collapsed = true
+            }
+            
+            return dir
+        })
 
-        if (formattedFiles.length !== openedNodes.length) setOpenedNodes(formattedFiles)
+        if (formattedFiles.length !== openedNodes.length) {
+            setOpenedNodes(formattedFiles)
+        }
     }, [openedNodes])
 
     const handleExpand = useCallback((directory: Directory, index: number) => {
