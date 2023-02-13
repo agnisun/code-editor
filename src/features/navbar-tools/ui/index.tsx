@@ -1,5 +1,5 @@
 import { Box, Flex } from '@chakra-ui/react'
-import { FolderButton, HideButton, PlusButton } from './buttons'
+import { CollapseButton, FolderButton, HideButton, PlusButton } from './buttons'
 import { useAtom } from 'jotai'
 import { isHideAtom } from '@entities/navbar'
 
@@ -9,7 +9,10 @@ export const View = () => {
     return (
         <Box overflowX={'hidden'} p={'3px 5px'} borderBottom={'1px solid #fff'}>
             <Flex justifyContent={'space-between'}>
-                <Flex gap={'5px'}>{!isHide ? <FolderButton /> : <PlusButton />}</Flex>
+                <Flex gap={'5px'}>
+                    {!isHide ? <FolderButton /> : <PlusButton />}
+                    <CollapseButton/>
+                </Flex>
                 <HideButton />
             </Flex>
         </Box>
