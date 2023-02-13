@@ -11,7 +11,7 @@ export const View = () => {
             <Flex justifyContent={'space-between'}>
                 <Flex gap={'5px'}>
                     {!isHide ? <FolderButton /> : <PlusButton />}
-                    <CollapseButton/>
+                    <CollapseButton />
                 </Flex>
                 <HideButton />
             </Flex>

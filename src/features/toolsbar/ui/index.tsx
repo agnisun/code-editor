@@ -1,12 +1,10 @@
-import { Box, Flex, Icon, IconButton, useDisclosure } from '@chakra-ui/react'
+import { Box, Flex, Icon, IconButton, Popover, PopoverTrigger } from '@chakra-ui/react'
 import { MdSettings } from 'react-icons/md'
-import { SettingsModal } from './modals/SettingModal'
+import { SettingsModal } from './modals/settings-modal'
 
 export const View = () => {
-    const { onOpen, isOpen, onClose } = useDisclosure()
-
     return (
-        <>
+        <Popover placement={'bottom-start'}>
             <Flex
                 bg={'#111'}
                 alignItems={'center'}
@@ -16,16 +14,17 @@ export const View = () => {
             >
                 <Box flex={'1 1 auto'}>Path</Box>
                 <Flex gap={'5px'}>
-                    <IconButton
-                        onClick={onOpen}
-                        size={'sm'}
-                        variant={'toolsbar'}
-                        aria-label={'Settings'}
-                        icon={<Icon as={MdSettings} />}
-                    />
+                    <PopoverTrigger>
+                        <IconButton
+                            size={'sm'}
+                            variant={'toolsbar'}
+                            aria-label={'Settings'}
+                            icon={<Icon as={MdSettings} />}
+                        />
+                    </PopoverTrigger>
                 </Flex>
             </Flex>
-            <SettingsModal isOpen={isOpen} onClose={onClose} />
-        </>
+            <SettingsModal />
+        </Popover>
     )
 }
