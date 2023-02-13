@@ -17,12 +17,11 @@
     "jsx": "react-jsx",
     "baseUrl": "./src",
     "paths": {
-      "@img/*": ["./assets/img/*"],
-      "@theme/*": ["./assets/theme/*"],
-      "@hooks/*": ["./hooks/*"],
-      "@utils/*": ["./utils/*"],
-      "@state/*": ["./state/*"],
-      "@components/*": ["./components/*"]
+      "@shared/*": ["./shared/*"],
+      "@entities/*": ["./entities/*"],
+      "@features/*": ["./features/*"],
+      "@widgets/*": ["./widgets/*"],
+      "@app/*": ["./app/*"],
     }
   },
   "include": ["src"],

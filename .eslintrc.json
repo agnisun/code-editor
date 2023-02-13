@@ -31,7 +31,7 @@
     },
     "ignorePatterns": [
         "node_modules/",
-        "src/assets/**",
+        "src/shared/img/**",
         "src/**/*.css"
     ],
     "settings": {

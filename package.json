@@ -20,6 +20,7 @@
     "@tauri-apps/api": "^1.2.0",
     "cm6-theme-material-dark": "^0.2.0",
     "codemirror": "^6.0.1",
+    "compose-function": "^3.0.3",
     "framer-motion": "^8.4.2",
     "jotai": "^1.13.0",
     "nanoid": "^4.0.0",
@@ -31,6 +32,7 @@
   },
   "devDependencies": {
     "@tauri-apps/cli": "^1.2.2",
+    "@types/compose-function": "^0.0.30",
     "@types/node": "^18.7.10",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",

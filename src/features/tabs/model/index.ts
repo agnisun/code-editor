@@ -1,0 +1,1 @@
+export { useHorizontalScroll } from './tabs'

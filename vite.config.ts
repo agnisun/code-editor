@@ -27,12 +27,11 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@img': path.resolve(__dirname, 'src/assets/img/'),
-      '@theme': path.resolve(__dirname, 'src/assets/theme/'),
-      '@hooks': path.resolve(__dirname, 'src/hooks/'),
-      '@utils': path.resolve(__dirname, 'src/utils/'),
-      '@state': path.resolve(__dirname, 'src/state/'),
-      '@components': path.resolve(__dirname, 'src/components/'),
+      '@shared': path.resolve(__dirname, 'src/shared/'),
+      '@entities': path.resolve(__dirname, 'src/entities/'),
+      '@features': path.resolve(__dirname, 'src/features/'),
+      '@widgets': path.resolve(__dirname, 'src/widgets/'),
+      '@app': path.resolve(__dirname, 'src/app/'),
     }
   }
 });
