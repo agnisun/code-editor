@@ -20,8 +20,8 @@ export const View: FC<ViewProps> = ({ file }) => {
 
     const updateEditorContent = async () => {
         const element = document.getElementById(id)
-
-        if (!element) return
+        
+        if (!element || selectedFile.id !== id) return
 
         const content = await readFile(selectedFile.path.slice(0, -1))
         const baseTheme = EditorView.theme({
