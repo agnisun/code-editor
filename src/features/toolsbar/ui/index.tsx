@@ -9,6 +9,7 @@ export const View = () => {
     const [project] = useAtom(projectAtom)
     const [theme] = useAtom(themeAtom)
     const {
+        body: { color },
         toolsbar: { background },
         borders,
     } = theme
@@ -16,11 +17,12 @@ export const View = () => {
     return (
         <Popover placement={'bottom-start'}>
             <Flex
+                color={color}
                 bg={background}
                 alignItems={'center'}
                 p={'5px'}
-                borderTop={`${borders.size} solid ${borders.color}`}
-                borderBottom={`${borders.size} solid ${borders.color}`}
+                borderTop={`1px solid ${borders.color}`}
+                borderBottom={`1px solid ${borders.color}`}
             >
                 <Box flex={'1 1 auto'} overflow={'hidden'} whiteSpace={'nowrap'}>
                     <Box textOverflow={'ellipsis'} overflow={'hidden'}>
@@ -34,7 +36,7 @@ export const View = () => {
                             variant={'toolsbar'}
                             aria-label={'Settings'}
                             icon={<Icon as={MdSettings} />}
-                            _hover={{ border: `${borders.size} solid ${borders.color}` }}
+                            _hover={{ border: `1px solid ${borders.color}` }}
                         />
                     </PopoverTrigger>
                 </Flex>

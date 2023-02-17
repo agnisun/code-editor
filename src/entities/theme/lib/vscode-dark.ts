@@ -13,17 +13,18 @@ export const vscodeDark: ITheme = {
         logoColor: '#fff',
     },
     borders: {
-        size: '1px',
         color: '#969696',
     },
     modals: {
         background: '#252526',
         borders: {
-            size: '1px',
             color: '#969696',
         },
         hover: {
-            background: 'rgba(255, 255, 255, 0.1)',
+            background: 'rgba(37, 37, 38, 0.4)',
+        },
+        active: {
+            background: '#37373D',
         },
     },
     navbar: {
@@ -46,8 +47,6 @@ export const vscodeDark: ITheme = {
         item: {
             color: '#969696',
             background: '#2D2D2D',
-            border: 'none',
-            borderRight: '1px solid #252526',
             iconHover: {
                 background: 'rgba(255, 255, 255, 0.1)',
                 color: '#969696',
@@ -57,7 +56,6 @@ export const vscodeDark: ITheme = {
             color: '#fff',
             background: '#1E1E1E',
         },
-        hover: {},
     },
     codemirror: vscodeDarkCode,
 }

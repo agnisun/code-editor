@@ -18,7 +18,6 @@ export const View: FC<ViewProps> = ({ file }) => {
     const { selectedFile } = useFiles()
     const [theme] = useAtom(themeAtom)
     const editorRef = useRef<EditorView | null>(null)
-    const themeRef = useRef<string>(theme.name)
     const visibility = selectedFile.id === id ? 'visible' : 'hidden'
     const height = selectedFile.id === id ? '100%' : '0'
 
@@ -28,10 +27,6 @@ export const View: FC<ViewProps> = ({ file }) => {
         if (!element || selectedFile.id !== id) return
 
         const content = await readFile(selectedFile.path.slice(0, -1))
-
-        if (theme.name !== themeRef.current) {
-            console.log(theme.name)
-        }
 
         editorRef.current = new EditorView({
             doc: content,
@@ -43,7 +38,7 @@ export const View: FC<ViewProps> = ({ file }) => {
     useEffect(() => {
         updateEditorContent()
         return () => editorRef.current?.destroy()
-    }, [selectedFile, theme])
+    }, [selectedFile])
 
     return <Box as={'main'} id={id} visibility={visibility} height={height} />
 }

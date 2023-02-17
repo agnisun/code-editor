@@ -17,13 +17,12 @@ export interface ITheme {
     modals: {
         background: string
         borders: {
-            size: string
             color: string
         }
         hover: CSSProperties
+        active: CSSProperties
     }
     borders: {
-        size: string
         color: string
     }
     titlebar: {
@@ -42,11 +41,8 @@ export interface ITheme {
         item: {
             color: string
             background: string
-            border: string
-            borderRight?: string
             iconHover?: CSSProperties
         }
-        hover: CSSProperties
         active: CSSProperties
     }
     codemirror: Extension

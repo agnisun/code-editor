@@ -19,7 +19,7 @@ export const HideButton = () => {
             onClick={handleOnClick}
             icon={<Icon as={HiMinus} />}
             aria-label={'Hide navbar'}
-            _hover={{ border: `${borders.size} solid ${borders.color}` }}
+            _hover={{ border: `1px solid ${borders.color}` }}
         />
     )
 }

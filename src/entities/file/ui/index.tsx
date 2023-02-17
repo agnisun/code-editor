@@ -26,7 +26,6 @@ export const View: FC<ViewProps> = ({ file, style = undefined }) => {
             <FileContainer
                 isResizing={isResizing}
                 isSelected={isSelected}
-                file={file}
                 onClick={handleSelectFile}
                 style={{ ...style, paddingLeft: `${depth ? depth * 20 : 5}px` }}
             >

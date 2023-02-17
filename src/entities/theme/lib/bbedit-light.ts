@@ -6,56 +6,54 @@ export const bbedit: ITheme = {
     theme: 'light',
     id: '6hyS4_q8CKoUopgWdbH50',
     body: {
-        color: '#fff',
+        color: '#1E1E1E',
         background: '#fff',
         logoColor: '#1E1E1E',
     },
     borders: {
-        size: '0',
-        color: 'transparent',
+        color: 'rgba(30, 30, 30, .5)',
     },
     modals: {
-        background: '#252526',
+        background: '#FFFFFF',
         borders: {
-            size: '1px',
-            color: '#969696',
+            color: 'rgba(30, 30, 30, .5)',
+        },
+        active: {
+            background: '#E5E5E5',
         },
         hover: {
-            background: 'rgba(255, 255, 255, 0.1)',
+            background: '#ECECEC',
         },
     },
     navbar: {
-        background: '#252526',
+        background: '#F3F3F3',
         hover: {
-            background: 'rgba(37, 37, 38, 0.4)',
+            background: '#ECECEC',
         },
         active: {
-            background: '#37373D',
+            background: '#E5E5E5',
         },
     },
     titlebar: {
-        background: '#323233',
+        background: '#E5E5E5',
     },
     toolsbar: {
-        background: '#252526',
+        background: '#F3F3F3',
     },
     tabs: {
-        background: '#252526',
+        background: '#F3F3F3',
         item: {
-            color: '#969696',
-            background: '#2D2D2D',
-            border: 'none',
-            borderRight: '1px solid #252526',
+            color: 'rgba(30, 30, 30, 0.5)',
+            background: '#ECECEC',
             iconHover: {
-                background: 'rgba(255, 255, 255, 0.1)',
-                color: '#969696',
+                background: 'rgba(55, 55, 55, 0.1)',
+                color: '#1E1E1E',
             },
         },
         active: {
-            color: '#fff',
-            background: '#1E1E1E',
+            color: '#1E1E1E',
+            background: '#FFFFFF',
         },
-        hover: {},
     },
     codemirror: bbeditCode,
 }

@@ -19,7 +19,7 @@ export const FolderButton = () => {
             onClick={handleOnClick}
             icon={<Icon as={AiOutlineFolderOpen} />}
             aria-label={'Open folder'}
-            _hover={{ border: `${borders.size} solid ${borders.color}` }}
+            _hover={{ border: `1px solid ${borders.color}` }}
         />
     )
 }

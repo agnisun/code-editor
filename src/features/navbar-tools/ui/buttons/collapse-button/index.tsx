@@ -19,7 +19,7 @@ export const CollapseButton = () => {
             onClick={handleOnClick}
             icon={<Icon as={BsArrowsCollapse} />}
             aria-label={'Collapse folders'}
-            _hover={{ border: `${borders.size} solid ${borders.color}` }}
+            _hover={{ border: `1px solid ${borders.color}` }}
         />
     )
 }

@@ -19,7 +19,7 @@ export const PlusButton = () => {
             onClick={handleOnClick}
             icon={<Icon as={HiPlus} />}
             aria-label={'Show navbar'}
-            _hover={{ border: `${borders.size} solid ${borders.color}` }}
+            _hover={{ border: `1px solid ${borders.color}` }}
         />
     )
 }

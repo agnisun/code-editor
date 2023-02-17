@@ -17,7 +17,7 @@ const ThemeItem: FC<ThemeItemProps> = ({ themeItem, index }) => {
     const [theme, setTheme] = useAtom(themeAtom)
     const isSelected = theme.name === themeItem.name
     const {
-        modals: { hover },
+        modals: { hover, active },
     } = theme
 
     const handleOnClick = useCallback(() => {
@@ -30,8 +30,8 @@ const ThemeItem: FC<ThemeItemProps> = ({ themeItem, index }) => {
             cursor={'default'}
             px={'10px'}
             py={'5px'}
-            sx={isSelected ? hover : undefined}
-            _hover={hover}
+            sx={isSelected ? active : undefined}
+            _hover={!isSelected ? hover : undefined}
         >
             <Flex gap={'5px'} alignItems={'center'}>
                 <Box fontSize={'.9rem'}>{index + 1}.</Box>
@@ -44,18 +44,19 @@ const ThemeItem: FC<ThemeItemProps> = ({ themeItem, index }) => {
 export const ThemeModal: FC<ThemeModalProps> = ({ isOpen, onClose }) => {
     const [theme] = useAtom(themeAtom)
     const {
+        body: { color },
         modals: { background, borders },
     } = theme
 
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
-            <ModalContent bg={background} border={`${borders.size} solid ${borders.color}`}>
+            <ModalContent color={color} bg={background} border={`1px solid ${borders.color}`}>
                 <ModalHeader
                     display={'flex'}
                     fontSize={'18px'}
                     justifyContent={'center'}
-                    borderBottom={`${borders.size} solid ${borders.color}`}
+                    borderBottom={`1px solid ${borders.color}`}
                 >
                     Theme
                 </ModalHeader>

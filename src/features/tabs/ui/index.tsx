@@ -19,7 +19,7 @@ export const View = () => {
             className={'tab-scroll'}
             ref={ref}
             bg={background}
-            borderBottom={`${borders.size} solid ${borders.color}`}
+            borderBottom={`1px solid ${borders.color}`}
             overflowX={'auto'}
             overflowY={'hidden'}
             alignItems={'center'}

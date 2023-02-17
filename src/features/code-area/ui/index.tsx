@@ -7,8 +7,11 @@ import { useFiles } from '@entities/file'
 import { CodeItem } from '@entities/code'
 import { View as InitialCodeArea } from './initial-code-area'
 import { PreviewImage } from '@entities/preview-image'
+import { themeAtom } from '@entities/theme'
 
 export const View = () => {
+    const [theme] = useAtom(themeAtom)
+    const { body } = theme
     const { selectedFile } = useFiles()
     const [selectedFiles] = useAtom(selectedFilesAtom)
     const isImage = useCallback((file: IFile) => {
@@ -22,7 +25,7 @@ export const View = () => {
     }
 
     return (
-        <Box height={'calc(100vh - 131px)'} bg={'#2E3235'}>
+        <Box height={'calc(100vh - 131px)'} bg={body.background} key={theme.id}>
             {selectedFiles.map((file) => {
                 if (isImage(file)) return <PreviewImage key={file.id} file={file} />
 

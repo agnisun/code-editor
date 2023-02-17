@@ -26,7 +26,6 @@ export const View: FC<ViewProps> = ({ directory, index, style = undefined }) => 
     return (
         <>
             <FileContainer
-                file={directory}
                 onClick={handleOnClick}
                 isResizing={isResizing}
                 style={{ ...style, paddingLeft: `${depth ? depth * 20 : 5}px` }}

@@ -22,7 +22,7 @@ export const View: FC<ViewProps> = ({ startResizing }) => {
             h={'100%'}
             onMouseDown={startResizing}
         >
-            <Box bg={borders.color} w={borders.size} />
+            <Box bg={borders.color} w={'1px'} />
         </Flex>
     )
 }

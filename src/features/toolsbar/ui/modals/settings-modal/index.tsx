@@ -6,6 +6,7 @@ import { themeAtom } from '@entities/theme'
 export const SettingsModal = () => {
     const [theme] = useAtom(themeAtom)
     const {
+        body: { color },
         modals: { background, borders },
     } = theme
     const { isOpen, onClose, onOpen } = useDisclosure()
@@ -13,7 +14,7 @@ export const SettingsModal = () => {
     return (
         <>
             <Portal>
-                <PopoverContent bg={background} borderColor={borders.color} w={'200px'} color={'#fff'} minH={'auto'}>
+                <PopoverContent color={color} bg={background} borderColor={borders.color} w={'200px'} minH={'auto'}>
                     <PopoverBody display={'flex'} flexDir={'column'}>
                         <Box px={'30px'} cursor={'pointer'} onClick={onOpen}>
                             Theme...

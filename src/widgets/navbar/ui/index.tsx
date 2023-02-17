@@ -14,6 +14,7 @@ export const View = () => {
     const [isResizing] = useAtom(isResizingAtom)
     const [theme] = useAtom(themeAtom)
     const {
+        body: { color },
         navbar: { background },
     } = theme
 
@@ -37,6 +38,7 @@ export const View = () => {
             bg={background}
             pos={'relative'}
             ref={navbarRef}
+            color={color}
             onMouseDown={handleOnMouseDown}
         >
             <NavbarTools />
