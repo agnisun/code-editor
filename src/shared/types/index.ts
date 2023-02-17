@@ -1,5 +1,5 @@
 export interface IProject {
-    projectPath: string
+    project_path: string
     directories: IDirectory[]
     files: IFile[]
 }

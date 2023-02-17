@@ -36,7 +36,7 @@ export const View = () => {
                         itemSize={32}
                         width={width}
                         itemKey={(index) => openedNodes[index].id}
-                        className={'navbar-scroll'}
+                        className={'main-scroll'}
                     >
                         {NavbarRow}
                     </FixedSizeList>

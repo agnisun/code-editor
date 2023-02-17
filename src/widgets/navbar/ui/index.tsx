@@ -6,11 +6,16 @@ import { useResizeNavbar } from '../model'
 import { NavbarTools } from '@features/navbar-tools'
 import { NavbarFiles } from '@features/navbar-files'
 import { ViewDrawer } from '@features/view-drawer'
+import { themeAtom } from '@entities/theme'
 
 export const View = () => {
     const { startResizing, navbarWidth, navbarRef } = useResizeNavbar()
     const [isHide] = useAtom(isHideAtom)
     const [isResizing] = useAtom(isResizingAtom)
+    const [theme] = useAtom(themeAtom)
+    const {
+        navbar: { background },
+    } = theme
 
     const handleOnMouseDown = useCallback(
         (e: MouseEvent) => {
@@ -29,7 +34,7 @@ export const View = () => {
             userSelect={'none'}
             minW={isHide ? '50px' : '190px'}
             w={navbarWidth + 'px'}
-            bg={'#222'}
+            bg={background}
             pos={'relative'}
             ref={navbarRef}
             onMouseDown={handleOnMouseDown}

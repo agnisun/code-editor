@@ -1,45 +1,68 @@
-import { FC } from 'react'
+import { FC, useCallback } from 'react'
 import { Box, Flex, List, ListItem, Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay } from '@chakra-ui/react'
+import { ITheme, themeAtom, themes } from '@entities/theme/model/theme'
+import { useAtom } from 'jotai'
 
 interface ThemeModalProps {
     isOpen: boolean
     onClose: () => void
 }
 
-interface ItemContainerProps {
-    children: JSX.Element
+interface ThemeItemProps {
+    themeItem: ITheme
+    index: number
 }
 
-const ItemContainer: FC<ItemContainerProps> = ({ children }) => (
-    <ListItem cursor={'default'} px={'10px'} py={'5px'} _hover={{ background: '#ccc' }}>
-        {children}
-    </ListItem>
-)
+const ThemeItem: FC<ThemeItemProps> = ({ themeItem, index }) => {
+    const [theme, setTheme] = useAtom(themeAtom)
+    const isSelected = theme.name === themeItem.name
+    const {
+        modals: { hover },
+    } = theme
+
+    const handleOnClick = useCallback(() => {
+        setTheme(themeItem)
+    }, [])
+
+    return (
+        <ListItem
+            onClick={handleOnClick}
+            cursor={'default'}
+            px={'10px'}
+            py={'5px'}
+            sx={isSelected ? hover : undefined}
+            _hover={hover}
+        >
+            <Flex gap={'5px'} alignItems={'center'}>
+                <Box fontSize={'.9rem'}>{index + 1}.</Box>
+                <Box>{themeItem.name}</Box>
+            </Flex>
+        </ListItem>
+    )
+}
 
 export const ThemeModal: FC<ThemeModalProps> = ({ isOpen, onClose }) => {
-    const themes = ['Light', 'Dark']
+    const [theme] = useAtom(themeAtom)
+    const {
+        modals: { background, borders },
+    } = theme
 
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
-            <ModalContent bg={'#222'} border={'1px solid #fff'}>
+            <ModalContent bg={background} border={`${borders.size} solid ${borders.color}`}>
                 <ModalHeader
                     display={'flex'}
                     fontSize={'18px'}
                     justifyContent={'center'}
-                    borderBottom={'1px solid #fff'}
+                    borderBottom={`${borders.size} solid ${borders.color}`}
                 >
                     Theme
                 </ModalHeader>
                 <ModalBody p={0}>
                     <List py={'5px'}>
                         {themes.map((theme, i) => (
-                            <ItemContainer key={i}>
-                                <Flex gap={'5px'} alignItems={'center'}>
-                                    <Box fontSize={'.9rem'}>{i + 1}.</Box>
-                                    <Box>{theme}</Box>
-                                </Flex>
-                            </ItemContainer>
+                            <ThemeItem key={theme.id} themeItem={theme} index={i} />
                         ))}
                     </List>
                 </ModalBody>

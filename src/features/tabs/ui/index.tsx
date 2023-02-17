@@ -3,8 +3,14 @@ import { Flex } from '@chakra-ui/react'
 import { selectedFilesAtom } from '@entities/source'
 import { useHorizontalScroll } from '../model'
 import { TabItem } from '@entities/tab'
+import { themeAtom } from '@entities/theme'
 
 export const View = () => {
+    const [theme] = useAtom(themeAtom)
+    const {
+        borders,
+        tabs: { background },
+    } = theme
     const [selectedFiles] = useAtom(selectedFilesAtom)
     const ref = useHorizontalScroll()
 
@@ -12,9 +18,9 @@ export const View = () => {
         <Flex
             className={'tab-scroll'}
             ref={ref}
-            bg={'#222'}
-            borderBottom={'1px solid #fff'}
-            overflowX={'scroll'}
+            bg={background}
+            borderBottom={`${borders.size} solid ${borders.color}`}
+            overflowX={'auto'}
             overflowY={'hidden'}
             alignItems={'center'}
             h={'47px'}

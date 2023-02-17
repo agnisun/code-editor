@@ -1,0 +1,1 @@
+export { themeAtom } from './theme'

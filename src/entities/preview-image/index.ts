@@ -1,1 +1,1 @@
-export {View as PreviewImage} from './ui'
+export { View as PreviewImage } from './ui'

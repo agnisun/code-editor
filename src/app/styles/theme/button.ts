@@ -14,8 +14,9 @@ export const Button = defineStyleConfig({
         toolsbar: {
             fontSize: '18px',
             borderRadius: '5px',
+            border: '1px solid transparent',
             _hover: {
-                border: '1px solid #fff',
+                borderColor: '#1AEBFF',
             },
         },
     },

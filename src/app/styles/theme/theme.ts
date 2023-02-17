@@ -1,18 +1,17 @@
-import { extendTheme } from '@chakra-ui/react'
 import { Button } from './button'
 
-export const theme = extendTheme({
+export const baseTheme = {
     styles: {
         global: {
             body: {
                 fontSize: '18px',
                 lineHeight: '1.2',
                 fontFamily: 'Roboto',
-                color: '#fff',
+                color: 'auto',
             },
         },
     },
     components: {
         Button,
     },
-})
+}

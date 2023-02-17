@@ -3,7 +3,7 @@ import { IFile, IFileNode, IProject } from '@shared/types'
 
 export const isLoadingAtom = atom<boolean>(false)
 export const projectAtom = atom<IProject>({
-    projectPath: '',
+    project_path: '',
     directories: [],
     files: [],
 })

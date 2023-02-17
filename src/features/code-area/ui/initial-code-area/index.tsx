@@ -1,7 +1,14 @@
 import { useCallback } from 'react'
 import { Box, Icon, IconProps } from '@chakra-ui/react'
+import { useAtom } from 'jotai'
+import { themeAtom } from '@entities/theme'
 
 export const View = () => {
+    const [theme] = useAtom(themeAtom)
+    const {
+        body: { background, logoColor },
+    } = theme
+
     const LogoIcon = useCallback((props: IconProps) => {
         return (
             <Icon viewBox="0 0 19 13" {...props} boxSize={20}>
@@ -24,8 +31,14 @@ export const View = () => {
     }, [])
 
     return (
-        <Box height={'calc(100vh - 131px)'} display={'flex'} justifyContent={'center'} alignItems={'center'}>
-            <LogoIcon color={'#fff'} opacity={'.4'} />
+        <Box
+            height={'calc(100vh - 131px)'}
+            bg={background}
+            display={'flex'}
+            justifyContent={'center'}
+            alignItems={'center'}
+        >
+            <LogoIcon color={logoColor} opacity={'.4'} />
         </Box>
     )
 }

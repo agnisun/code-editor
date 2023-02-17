@@ -4,12 +4,18 @@ import { Box, Flex, Icon } from '@chakra-ui/react'
 import { IoMdClose } from 'react-icons/io'
 import { useFiles } from '@entities/file'
 import { FileIcon } from '@shared/ui'
+import { useAtom } from 'jotai'
+import { themeAtom } from '@entities/theme'
 
 interface ViewProps {
     file: IFile
 }
 
 export const View: FC<ViewProps> = ({ file }) => {
+    const [theme] = useAtom(themeAtom)
+    const {
+        tabs: { item, active },
+    } = theme
     const { name, id } = file
     const { selectFile, closeFile, selectedFile } = useFiles()
     const isSelected = selectedFile.id === id
@@ -35,8 +41,8 @@ export const View: FC<ViewProps> = ({ file }) => {
             position={'relative'}
             gap={'5px'}
             fontSize={'20px'}
-            background={isSelected ? '#111' : 'transparent'}
-            color={isSelected ? '#fff' : 'rgba(255,255,255, 0.7)'}
+            background={isSelected ? (active.background as string) : item.background}
+            color={isSelected ? active.color : item.color}
         >
             <FileIcon fileName={name} />
             <Box userSelect={'none'} whiteSpace={'nowrap'} textOverflow={'ellipsis'} overflow={'hidden'}>
@@ -46,13 +52,14 @@ export const View: FC<ViewProps> = ({ file }) => {
                 onClick={handleCloseFile}
                 alignItems={'center'}
                 position={'absolute'}
-                top={'50%'}
-                right={'5px'}
-                sx={{ translate: '0 -50%' }}
+                top={'55%'}
+                sx={{ transform: 'translateY(-50%)' }}
+                right={'2px'}
                 borderRadius={'50%'}
-                _hover={{ background: '#fff', color: '#222' }}
+                p={'3px'}
+                _hover={{ ...item.iconHover, color: isSelected ? active.color : item.iconHover?.color || 'auto' }}
             >
-                <Icon as={IoMdClose} aria-label={'Close tab'} />
+                <Icon fontSize={'18px'} as={IoMdClose} aria-label={'Close tab'} />
             </Flex>
         </Flex>
     )
