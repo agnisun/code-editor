@@ -14,7 +14,7 @@ export const useHorizontalScroll = () => {
             })
         }
 
-        elem && elem.addEventListener('wheel', onWheel)
+        elem && elem.addEventListener('wheel', onWheel, {passive: true})
 
         return () => {
             elem && elem.removeEventListener('wheel', onWheel)
