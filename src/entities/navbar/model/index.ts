@@ -1,1 +1,1 @@
-export { navbarWidthAtom, isHideAtom, isResizingAtom } from './navbar'
+export { navbarWidthAtom, isHideAtom, isResizingAtom, prevNavbarWidthAtom } from './navbar'

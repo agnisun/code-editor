@@ -2,12 +2,13 @@ import { useCallback } from 'react'
 import { useAtom } from 'jotai'
 import { isLoadingAtom, openedNodesAtom, projectAtom } from '@entities/source'
 import { open } from '@tauri-apps/api/dialog'
-import { isHideAtom, navbarWidthAtom } from '@entities/navbar'
+import { isHideAtom, navbarWidthAtom, prevNavbarWidthAtom } from '@entities/navbar'
 import { readDirectory } from '@shared/lib/filesys'
 import { formatDirectory } from '@shared/lib/formatDirectory'
 
 export const useTools = () => {
-    const [, setNavbarWidth] = useAtom(navbarWidthAtom)
+    const [navbarWidth, setNavbarWidth] = useAtom(navbarWidthAtom)
+    const [prevNavbarWidth, setPrevNavbarWidth] = useAtom(prevNavbarWidthAtom)
     const [, setIsHide] = useAtom(isHideAtom)
     const [isLoading, setIsLoading] = useAtom(isLoadingAtom)
     const [project, setProject] = useAtom(projectAtom)
@@ -42,14 +43,15 @@ export const useTools = () => {
     }, [openedNodes])
 
     const hideNavbar = useCallback(() => {
+        setPrevNavbarWidth(navbarWidth)
         setNavbarWidth(50)
         setIsHide(true)
-    }, [])
+    }, [navbarWidth])
 
     const showNavbar = useCallback(() => {
-        setNavbarWidth(190)
+        setNavbarWidth(prevNavbarWidth)
         setIsHide(false)
-    }, [])
+    }, [prevNavbarWidth])
 
     return { loadProject, collapseAllDirectories, hideNavbar, showNavbar }
 }

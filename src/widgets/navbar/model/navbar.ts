@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useRef } from 'react'
 import { useAtom } from 'jotai'
-import { isHideAtom, isResizingAtom, navbarWidthAtom } from '@entities/navbar'
+import { isHideAtom, isResizingAtom, navbarWidthAtom, prevNavbarWidthAtom } from '@entities/navbar'
 
 export const useResizeNavbar = () => {
     const navbarRef = useRef<HTMLDivElement>(null)
     const [navbarWidth, setNavbarWidth] = useAtom(navbarWidthAtom)
+    const [, setPrevNavbarWidth] = useAtom(prevNavbarWidthAtom)
     const [, setIsNavbarHide] = useAtom(isHideAtom)
     const [isResizing, setIsResizing] = useAtom(isResizingAtom)
 
@@ -24,7 +25,8 @@ export const useResizeNavbar = () => {
                 if (mouseMoveEvent.clientX < 80) {
                     setIsNavbarHide(true)
                     setNavbarWidth(50)
-                } else if (mouseMoveEvent.clientX > 180) {
+                    setPrevNavbarWidth(50)
+                } else if (mouseMoveEvent.clientX > 180 && mouseMoveEvent.clientX < window.innerWidth - 100) {
                     setIsNavbarHide(false)
                     setNavbarWidth(mouseMoveEvent.clientX - navbarRef.current.getBoundingClientRect().left)
                 }
