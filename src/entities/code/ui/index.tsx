@@ -37,7 +37,6 @@ export const View: FC<ViewProps> = ({ file }) => {
 
     useEffect(() => {
         updateEditorContent()
-        return () => editorRef.current?.destroy()
     }, [selectedFile])
 
     return <Box as={'main'} id={id} visibility={visibility} height={height} />
