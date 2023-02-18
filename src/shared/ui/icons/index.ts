@@ -1,1 +1,1 @@
-export { View as FileIcon } from './FileIcon'
+export { View as FileIcon } from './file-icon'

@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { IDirectory } from '@shared/types'
 import { useAtom } from 'jotai'
 import { openedNodesAtom } from '@entities/source'
-import { formatDirectory } from '@shared/lib/formatDirectory'
+import { formatDirectory } from '@shared/lib/format-directory'
 import { readDirectory } from '@shared/lib/filesys'
 
 export const useDirectories = () => {

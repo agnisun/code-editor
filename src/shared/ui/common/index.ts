@@ -1,1 +1,1 @@
-export { View as FileContainer } from './FileContainer'
+export { View as FileContainer } from './file-container'

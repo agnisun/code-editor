@@ -4,7 +4,7 @@ import { isLoadingAtom, openedNodesAtom, projectAtom } from '@entities/source'
 import { open } from '@tauri-apps/api/dialog'
 import { isHideAtom, navbarWidthAtom, prevNavbarWidthAtom } from '@entities/navbar'
 import { readDirectory } from '@shared/lib/filesys'
-import { formatDirectory } from '@shared/lib/formatDirectory'
+import { formatDirectory } from '@shared/lib/format-directory'
 
 export const useTools = () => {
     const [navbarWidth, setNavbarWidth] = useAtom(navbarWidthAtom)
