@@ -21,7 +21,7 @@ export const vscodeDark: ITheme = {
             color: '#969696',
         },
         hover: {
-            background: 'rgba(37, 37, 38, 0.4)',
+            background: '#2A2D2E',
         },
         active: {
             background: '#37373D',
@@ -30,7 +30,7 @@ export const vscodeDark: ITheme = {
     navbar: {
         background: '#252526',
         hover: {
-            background: 'rgba(37, 37, 38, 0.4)',
+            background: '#2A2D2E',
         },
         active: {
             background: '#37373D',

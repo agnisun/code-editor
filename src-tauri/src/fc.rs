@@ -37,24 +37,24 @@ pub fn read_directory(dir_path: &str) -> Project {
 
     for entry in paths {
         let entry = entry.unwrap();
-        let path = entry.path();
+        let entry_path = entry.path();
 
-        let file_name = match entry.file_name().into_string() {
+        let name = match entry.file_name().into_string() {
             Ok(str) => str,
             Err(_error) => String::from("ERROR"),
         };
-        let file_path = dir_path.to_owned() + &file_name + "/";
-        let mut file_kind = String::from("file");
-        let file_id = Uuid::new_v4().to_string();
+        let path = dir_path.to_owned() + &name;
+        let mut kind = String::from("file");
+        let id = Uuid::new_v4().to_string();
         
-        if path.is_dir() {
-            file_kind = String::from("directory");
+        if entry_path.is_dir() {
+            kind = String::from("directory");
             
             let directory = Directory {
-                name: file_name,
-                kind: file_kind,
-                path: file_path,
-                id:file_id,
+                name,
+                kind,
+                path,
+                id,
                 collapsed: true,
                 depth: 0
             };
@@ -62,10 +62,10 @@ pub fn read_directory(dir_path: &str) -> Project {
             directories.push(directory)
         } else {
             let file = File {
-                name: file_name,
-                kind: file_kind,
-                path: file_path,
-                id: file_id,
+                name,
+                kind,
+                path,
+                id,
                 depth: 0
             };
 

@@ -8,10 +8,13 @@ import { openedNodesAtom } from '@entities/source'
 import { IDirectory, IFile } from '@shared/types'
 import { NavbarFile } from '@entities/file'
 import { NavbarDirectory } from '@entities/directory'
+import { ContextMenu, contextMenuAtom } from '@entities/context-menu'
 
 export const View = () => {
     const [isNavbarHide] = useAtom(isHideAtom)
     const [openedNodes] = useAtom(openedNodesAtom)
+    const [contextMenu] = useAtom(contextMenuAtom)
+    const { isActive } = contextMenu
 
     const NavbarRow = useCallback(
         ({ index, style }: { index: number; style: CSSProperties }) => {
@@ -27,21 +30,25 @@ export const View = () => {
     )
 
     return (
-        <Box display={isNavbarHide ? 'none' : 'block'} h={'calc(100vh - 131px)'}>
-            <AutoSizer>
-                {({ height, width }) => (
-                    <FixedSizeList
-                        height={height}
-                        itemCount={openedNodes.length}
-                        itemSize={32}
-                        width={width}
-                        itemKey={(index) => openedNodes[index].id}
-                        className={'main-scroll'}
-                    >
-                        {NavbarRow}
-                    </FixedSizeList>
-                )}
-            </AutoSizer>
-        </Box>
+        <>
+            <Box display={isNavbarHide ? 'none' : 'block'} h={'calc(100vh - 131px)'}>
+                <AutoSizer>
+                    {({ height, width }) => (
+                        <FixedSizeList
+                            height={height}
+                            itemCount={openedNodes.length}
+                            itemSize={32}
+                            width={width}
+                            itemKey={(index) => openedNodes[index].id}
+                            className={'main-scroll'}
+                            style={{ overflow: isActive ? 'hidden' : 'auto' }}
+                        >
+                            {NavbarRow}
+                        </FixedSizeList>
+                    )}
+                </AutoSizer>
+            </Box>
+            <ContextMenu />
+        </>
     )
 }

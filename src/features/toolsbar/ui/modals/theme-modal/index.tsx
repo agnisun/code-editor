@@ -51,7 +51,7 @@ export const ThemeModal: FC<ThemeModalProps> = ({ isOpen, onClose }) => {
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
-            <ModalContent color={color} bg={background} border={`1px solid ${borders.color}`}>
+            <ModalContent fontSize={'16px'} color={color} bg={background} border={`1px solid ${borders.color}`}>
                 <ModalHeader
                     display={'flex'}
                     fontSize={'18px'}

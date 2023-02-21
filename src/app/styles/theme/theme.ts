@@ -7,7 +7,7 @@ export const baseTheme = {
                 fontSize: '18px',
                 lineHeight: '1.2',
                 fontFamily: 'Roboto',
-                color: 'auto',
+                overflow: 'hidden',
             },
         },
     },

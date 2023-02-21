@@ -14,8 +14,15 @@ export const SettingsModal = () => {
     return (
         <>
             <Portal>
-                <PopoverContent color={color} bg={background} borderColor={borders.color} w={'200px'} minH={'auto'}>
-                    <PopoverBody display={'flex'} flexDir={'column'}>
+                <PopoverContent
+                    fontSize={'16px'}
+                    color={color}
+                    bg={background}
+                    borderColor={borders.color}
+                    w={'200px'}
+                    minH={'auto'}
+                >
+                    <PopoverBody display={'flex'} flexDir={'column'} p={'5px 0'}>
                         <Box px={'30px'} cursor={'pointer'} onClick={onOpen}>
                             Theme...
                         </Box>

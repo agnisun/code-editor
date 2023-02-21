@@ -7,6 +7,10 @@ import { Navbar } from '@widgets/navbar'
 import { Loader } from '@features/loader'
 import { Editor } from '@widgets/editor'
 
+if (!process.env.NODE_ENV) {
+    document.addEventListener('contextmenu', (event) => event.preventDefault())
+}
+
 const App = () => {
     return (
         <>

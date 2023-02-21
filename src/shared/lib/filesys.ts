@@ -17,3 +17,63 @@ export const readFile = (filePath: string): Promise<string> => {
         })
     })
 }
+
+export const createFile = (filePath: string): Promise<void> => {
+    return new Promise((resolve, reject) => {
+        invoke('create_file', { filePath }).then((message: unknown) => {
+            if (message === 'OK') {
+                resolve()
+            } else {
+                reject()
+            }
+        })
+    })
+}
+
+export const renameFile = (filePath: string): Promise<void> => {
+    return new Promise((resolve, reject) => {
+        invoke('rename_file', { filePath }).then((message: unknown) => {
+            if (message === 'OK') {
+                resolve()
+            } else {
+                reject()
+            }
+        })
+    })
+}
+
+export const deleteFile = (filePath: string): Promise<string> => {
+    return new Promise((resolve, reject) => {
+        invoke('delete_file', { filePath }).then((message: unknown) => {
+            if (message === 'OK') {
+                resolve(message)
+            } else {
+                reject(message)
+            }
+        })
+    })
+}
+
+export const createDir = (dirPath: string): Promise<void> => {
+    return new Promise((resolve, reject) => {
+        invoke('create_dir', { dirPath }).then((message: unknown) => {
+            if (message === 'OK') {
+                resolve()
+            } else {
+                reject()
+            }
+        })
+    })
+}
+
+export const deleteDir = (dirPath: string): Promise<string> => {
+    return new Promise((resolve, reject) => {
+        invoke('delete_dir', { dirPath }).then((message: unknown) => {
+            if (message === 'OK') {
+                resolve(message)
+            } else {
+                reject(message)
+            }
+        })
+    })
+}
