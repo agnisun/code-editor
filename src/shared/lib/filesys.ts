@@ -30,9 +30,9 @@ export const createFile = (filePath: string): Promise<void> => {
     })
 }
 
-export const renameFile = (filePath: string): Promise<void> => {
+export const renameFile = (filePath: string, newFilePath: string): Promise<void> => {
     return new Promise((resolve, reject) => {
-        invoke('rename_file', { filePath }).then((message: unknown) => {
+        invoke('rename_file', { filePath, newFilePath }).then((message: unknown) => {
             if (message === 'OK') {
                 resolve()
             } else {

@@ -31,13 +31,13 @@ export const View = () => {
     const [contextEntity] = useAtom(contextEntityAtom)
     const [contextMenu] = useAtom(contextMenuAtom)
     const { onOpen: onOpenModal, isOpen: isOpenModal, onClose: onCloseModal } = useDisclosure()
-    const { onClose, onDeleteFile, onDeleteDir } = useContextMenu()
+    const { onClose, onDeleteFile, onDeleteDir, openRenameInput } = useContextMenu()
     const {
         modals: { borders, background },
         body,
     } = theme
     const { pageX, pageY, isActive } = contextMenu
-    const { kind, path } = contextEntity
+    const { kind, path, id } = contextEntity
     const isFolder = kind === 'directory'
     const name = isFolder ? 'Folder' : 'File'
     useOutsideClick({ ref: elementRef, handler: isOpenModal ? undefined : onClose })
@@ -45,10 +45,15 @@ export const View = () => {
     const handleOnDelete = () => {
         if (isFolder) onDeleteDir(contextEntity)
         else onDeleteFile({ path })
+        onClose()
     }
 
     const handleOnClose = () => {
         onCloseModal()
+    }
+
+    const handleOpenRenameInput = () => {
+        openRenameInput({ path, name: getFilenameByPath(path), id, isActive: true })
         onClose()
     }
 
@@ -82,7 +87,7 @@ export const View = () => {
                                 </Box>
                             )}
                             <Box>
-                                <ContextItem>
+                                <ContextItem onClick={handleOpenRenameInput}>
                                     <Box>Rename {name}</Box>
                                 </ContextItem>
                                 <ContextItem onClick={onOpenModal}>

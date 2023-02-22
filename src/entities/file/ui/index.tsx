@@ -1,11 +1,12 @@
-import { CSSProperties, FC, MouseEvent } from 'react'
+import { ChangeEvent, CSSProperties, FC, KeyboardEvent, MouseEvent as ReactMouseEvent, useRef, useState } from 'react'
 import { IFile } from '@shared/types'
-import { Box } from '@chakra-ui/react'
+import { Box, Input, useOutsideClick } from '@chakra-ui/react'
 import { FileContainer, FileIcon } from '@shared/ui'
 import { useAtom } from 'jotai'
 import { isResizingAtom } from '@entities/navbar'
 import { useFiles } from '@entities/file'
-import { contextEntityAtom, useContextMenu } from '@entities/context-menu/model/context-menu'
+import { contextEntityAtom, contextRenameAtom, useContextMenu } from '@entities/context-menu/model/context-menu'
+import { renamePath } from '@entities/context-menu/lib/rename-path'
 
 interface ViewProps {
     file: IFile
@@ -14,21 +15,56 @@ interface ViewProps {
 
 export const View: FC<ViewProps> = ({ file, style = undefined }) => {
     const { depth, name, id, kind, path } = file
+    const [isError, setIsError] = useState<boolean>(false)
+    const [inputValue, setInput] = useState<string>(name)
+    const inputRef = useRef<HTMLInputElement>(null)
     const [isResizing] = useAtom(isResizingAtom)
     const [contextEntity] = useAtom(contextEntityAtom)
-    const { onOpen } = useContextMenu()
+    const [contextRename] = useAtom(contextRenameAtom)
+    const { onOpen, closeRenameInput, onRename, isRenameExists } = useContextMenu()
     const { selectFile, selectedFile } = useFiles()
+    const { isActive, id: renameId } = contextRename
     const isSelected = selectedFile.id === id
+    const isContextOpen = isActive && renameId === id
 
-    const handleSelectFile = () => {
+    const handleSelectFile = (e: ReactMouseEvent<HTMLDivElement>) => {
+        e.stopPropagation()
         selectFile({ ...file, path: file.path + '/' })
     }
 
-    const handleOnContextMenu = (e: MouseEvent<HTMLDivElement>) => {
+    const handleOnContextMenu = (e: ReactMouseEvent<HTMLDivElement>) => {
         e.preventDefault()
+        e.stopPropagation()
         const { pageX, pageY } = e
         onOpen({ kind, path, depth, id }, { isActive: true, pageX, pageY })
     }
+
+    const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const value = e.currentTarget.value
+        setIsError(isRenameExists(value))
+        setInput(value)
+    }
+
+    const handleOnCloseRename = async () => {
+        if (inputValue !== name) {
+            try {
+                await onRename({ path, newPath: renamePath(path, inputValue), id })
+            } catch (e) {
+                setInput(name)
+                setIsError(false)
+            }
+        }
+
+        closeRenameInput()
+    }
+
+    const handleOnKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter' && !isError) {
+            handleOnCloseRename()
+        }
+    }
+
+    useOutsideClick({ ref: inputRef, handler: isContextOpen ? handleOnCloseRename : undefined })
 
     return (
         <>
@@ -36,14 +72,30 @@ export const View: FC<ViewProps> = ({ file, style = undefined }) => {
                 isResizing={isResizing}
                 isSelected={isSelected}
                 isActive={contextEntity.id === id}
-                onContextMenu={handleOnContextMenu}
+                onContextMenu={isContextOpen ? (e) => e.preventDefault() : handleOnContextMenu}
                 onClick={handleSelectFile}
                 style={{ ...style, paddingLeft: `${depth ? depth * 20 : 5}px` }}
             >
-                <FileIcon fileName={name} />
-                <Box whiteSpace={'nowrap'} textOverflow={'ellipsis'} overflow={'hidden'}>
-                    {name}
-                </Box>
+                <FileIcon fileName={inputValue} />
+                {isContextOpen ? (
+                    <Input
+                        focusBorderColor={isError ? 'red.600' : undefined}
+                        onKeyDown={handleOnKeyDown}
+                        value={inputValue}
+                        onChange={handleOnChange}
+                        ref={inputRef}
+                        fontSize={'18px'}
+                        borderRadius={0}
+                        p={0}
+                        h={'32px'}
+                        autoFocus
+                        onClick={(e) => e.stopPropagation()}
+                    />
+                ) : (
+                    <Box whiteSpace={'nowrap'} textOverflow={'ellipsis'} overflow={'hidden'}>
+                        {inputValue}
+                    </Box>
+                )}
             </FileContainer>
         </>
     )
