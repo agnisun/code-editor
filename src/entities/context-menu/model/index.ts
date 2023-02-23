@@ -1,1 +1,3 @@
-export { contextEntityAtom, contextMenuAtom } from './context-menu'
+export { contextEntityAtom, contextMenuAtom, useContextMenu } from './context-menu'
+export { contextRenameAtom, useContextRename } from './context-rename'
+export { useDeleteFile } from './context-delete'

@@ -5,7 +5,7 @@ import { FileContainer, FileIcon } from '@shared/ui'
 import { useAtom } from 'jotai'
 import { isResizingAtom } from '@entities/navbar'
 import { useFiles } from '@entities/file'
-import { contextEntityAtom, contextRenameAtom, useContextMenu } from '@entities/context-menu/model/context-menu'
+import { contextEntityAtom, contextRenameAtom, useContextMenu, useContextRename } from '@entities/context-menu/model'
 import { renamePath } from '@entities/context-menu/lib/rename-path'
 
 interface ViewProps {
@@ -21,11 +21,12 @@ export const View: FC<ViewProps> = ({ file, style = undefined }) => {
     const [isResizing] = useAtom(isResizingAtom)
     const [contextEntity] = useAtom(contextEntityAtom)
     const [contextRename] = useAtom(contextRenameAtom)
-    const { onOpen, closeRenameInput, onRename, isRenameExists } = useContextMenu()
+    const { onOpen } = useContextMenu()
     const { selectFile, selectedFile } = useFiles()
-    const { isActive, id: renameId } = contextRename
+    const { isRenameExists, closeRenameInput, onRename } = useContextRename()
+    const { isActive: isRenameActive, id: renameId } = contextRename
     const isSelected = selectedFile.id === id
-    const isContextOpen = isActive && renameId === id
+    const isRenameOpen = isRenameActive && renameId === id
 
     const handleSelectFile = (e: ReactMouseEvent<HTMLDivElement>) => {
         e.stopPropagation()
@@ -64,7 +65,7 @@ export const View: FC<ViewProps> = ({ file, style = undefined }) => {
         }
     }
 
-    useOutsideClick({ ref: inputRef, handler: isContextOpen ? handleOnCloseRename : undefined })
+    useOutsideClick({ ref: inputRef, handler: isRenameOpen ? handleOnCloseRename : undefined })
 
     return (
         <>
@@ -72,12 +73,12 @@ export const View: FC<ViewProps> = ({ file, style = undefined }) => {
                 isResizing={isResizing}
                 isSelected={isSelected}
                 isActive={contextEntity.id === id}
-                onContextMenu={isContextOpen ? (e) => e.preventDefault() : handleOnContextMenu}
+                onContextMenu={isRenameOpen ? (e) => e.preventDefault() : handleOnContextMenu}
                 onClick={handleSelectFile}
                 style={{ ...style, paddingLeft: `${depth ? depth * 20 : 5}px` }}
             >
                 <FileIcon fileName={inputValue} />
-                {isContextOpen ? (
+                {isRenameOpen ? (
                     <Input
                         focusBorderColor={isError ? 'red.600' : undefined}
                         onKeyDown={handleOnKeyDown}

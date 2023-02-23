@@ -6,7 +6,7 @@ import { useAtom } from 'jotai'
 import { isResizingAtom } from '@entities/navbar'
 import { useDirectories } from '../model'
 import { FileContainer } from '@shared/ui'
-import { contextEntityAtom, contextRenameAtom, useContextMenu } from '@entities/context-menu/model/context-menu'
+import { contextEntityAtom, contextRenameAtom, useContextMenu, useContextRename } from '@entities/context-menu/model'
 import { renamePath } from '@entities/context-menu/lib/rename-path'
 
 interface ViewProps {
@@ -23,10 +23,11 @@ export const View: FC<ViewProps> = ({ directory, index, style = undefined }) => 
     const [isResizing] = useAtom(isResizingAtom)
     const [contextEntity] = useAtom(contextEntityAtom)
     const [contextRename] = useAtom(contextRenameAtom)
-    const { onOpen, isRenameExists, closeRenameInput, onRename } = useContextMenu()
+    const { onOpen } = useContextMenu()
+    const { isRenameExists, closeRenameInput, onRename } = useContextRename()
     const { handleExpand } = useDirectories()
-    const { isActive, id: renameId } = contextRename
-    const isContextOpen = isActive && renameId === id
+    const { isActive: isRenameActive, id: renameId } = contextRename
+    const isRenameOpen = isRenameActive && renameId === id
 
     const handleOnClick = (e: MouseEvent<HTMLDivElement>) => {
         e.stopPropagation()
@@ -65,19 +66,19 @@ export const View: FC<ViewProps> = ({ directory, index, style = undefined }) => 
         }
     }
 
-    useOutsideClick({ ref: inputRef, handler: isContextOpen ? handleOnCloseRename : undefined })
+    useOutsideClick({ ref: inputRef, handler: isRenameOpen ? handleOnCloseRename : undefined })
 
     return (
         <>
             <FileContainer
                 onClick={handleOnClick}
-                onContextMenu={isContextOpen ? (e) => e.preventDefault() : handleOnContextMenu}
+                onContextMenu={isRenameOpen ? (e) => e.preventDefault() : handleOnContextMenu}
                 isResizing={isResizing}
                 isActive={contextEntity.id === id}
                 style={{ ...style, paddingLeft: `${depth ? depth * 20 : 5}px` }}
             >
                 <Icon as={FcFolder} />
-                {isContextOpen ? (
+                {isRenameOpen ? (
                     <Input
                         focusBorderColor={isError ? 'red.600' : undefined}
                         onKeyDown={handleOnKeyDown}

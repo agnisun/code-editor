@@ -1,9 +1,14 @@
 import { Box, Portal, useDisclosure, useOutsideClick } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
-import { contextEntityAtom, contextMenuAtom } from '@entities/context-menu/model'
+import {
+    contextEntityAtom,
+    contextMenuAtom,
+    useContextMenu,
+    useContextRename,
+    useDeleteFile,
+} from '@entities/context-menu/model'
 import { themeAtom } from '@entities/theme'
 import { FC, useRef } from 'react'
-import { useContextMenu } from '@entities/context-menu/model/context-menu'
 import { ConfirmModal } from '@entities/context-menu/ui/modals/confirm-modal'
 import { getFilenameByPath } from '@shared/lib/get-filename'
 
@@ -31,7 +36,9 @@ export const View = () => {
     const [contextEntity] = useAtom(contextEntityAtom)
     const [contextMenu] = useAtom(contextMenuAtom)
     const { onOpen: onOpenModal, isOpen: isOpenModal, onClose: onCloseModal } = useDisclosure()
-    const { onClose, onDeleteFile, onDeleteDir, openRenameInput } = useContextMenu()
+    const { onClose } = useContextMenu()
+    const { openRenameInput } = useContextRename()
+    const { onDeleteFile, onDeleteDir } = useDeleteFile(onClose)
     const {
         modals: { borders, background },
         body,
