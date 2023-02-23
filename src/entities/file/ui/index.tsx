@@ -41,14 +41,14 @@ export const View: FC<ViewProps> = ({ file, style = undefined }) => {
 
     const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
         const value = e.currentTarget.value
-        setIsError(isRenameExists(value))
+        setIsError(isRenameExists(value, depth))
         setInput(value)
     }
 
     const handleOnCloseRename = async () => {
         if (inputValue !== name) {
             try {
-                await onRename({ path, newPath: renamePath(path, inputValue), id })
+                await onRename({ path, newPath: renamePath(path, inputValue), id, depth })
             } catch (e) {
                 setInput(name)
                 setIsError(false)
@@ -88,11 +88,12 @@ export const View: FC<ViewProps> = ({ file, style = undefined }) => {
                         borderRadius={0}
                         p={0}
                         h={'32px'}
+                        border={0}
                         autoFocus
                         onClick={(e) => e.stopPropagation()}
                     />
                 ) : (
-                    <Box whiteSpace={'nowrap'} textOverflow={'ellipsis'} overflow={'hidden'}>
+                    <Box h={'100%'} whiteSpace={'nowrap'} textOverflow={'ellipsis'} overflow={'hidden'}>
                         {inputValue}
                     </Box>
                 )}

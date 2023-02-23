@@ -59,9 +59,14 @@ export const useContextMenu = () => {
     const [openedNodes, setOpenedNodes] = useAtom(openedNodesAtom)
 
     const isRenameExists = useCallback(
-        (newName: string): boolean => {
+        (newName: string, depth: number): boolean => {
             for (let i = 0; i < openedNodes.length; i++) {
-                if (openedNodes[i].name === newName) return true
+                const node = openedNodes[i]
+                if (node.depth === depth) {
+                    if (node.name === newName) {
+                        return true
+                    }
+                }
             }
 
             return false
@@ -77,24 +82,32 @@ export const useContextMenu = () => {
         setContextRename(entity)
     }, [])
 
-    const onRename = useCallback(async ({ path, newPath, id }: { path: string; newPath: string; id: string }) => {
-        const newName = getFilenameByPath(newPath)
+    const onRename = useCallback(
+        async ({ path, newPath, id, depth }: { path: string; newPath: string; id: string; depth: number }) => {
+            const newName = getFilenameByPath(newPath)
 
-        for (let i = 0; i < openedNodes.length; i++) {
-            if (openedNodes[i].name === newName) throw new Error('This name is already exists')
-        }
-
-        await renameFile(path, newPath)
-        setOpenedNodes((nodes) => {
-            return nodes.map((node) => {
-                if (node.id === id) {
-                    return { ...node, path: newPath, name: newName }
+            for (let i = 0; i < openedNodes.length; i++) {
+                const node = openedNodes[i]
+                if (node.depth === depth) {
+                    if (node.name === newName) {
+                        throw new Error('This name is already exists')
+                    }
                 }
+            }
 
-                return node
+            await renameFile(path, newPath)
+            setOpenedNodes((nodes) => {
+                return nodes.map((node) => {
+                    if (depth === node.depth) {
+                        if (node.id === id) return { ...node, path: newPath, name: newName }
+                    }
+
+                    return node
+                })
             })
-        })
-    }, [])
+        },
+        [openedNodes]
+    )
 
     const onOpen = useCallback((entity: IContextEntity, menu: IContextMenu) => {
         const { kind } = entity
