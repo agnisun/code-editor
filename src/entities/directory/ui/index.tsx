@@ -7,7 +7,7 @@ import { isResizingAtom } from '@entities/navbar'
 import { useDirectories } from '../model'
 import { FileContainer } from '@shared/ui'
 import { contextEntityAtom, contextRenameAtom, useContextMenu, useContextRename } from '@entities/context-menu/model'
-import { renamePath } from '@entities/context-menu/lib/rename-path'
+import { renamePathByNewName } from '@entities/context-menu/lib/rename-path'
 
 interface ViewProps {
     directory: IDirectory
@@ -16,7 +16,7 @@ interface ViewProps {
 }
 
 export const View: FC<ViewProps> = ({ directory, index, style = undefined }) => {
-    const { depth, name, kind, path, id } = directory
+    const { depth, name, path } = directory
     const [isError, setIsError] = useState<boolean>(false)
     const [inputValue, setInput] = useState<string>(name)
     const inputRef = useRef<HTMLInputElement>(null)
@@ -26,8 +26,8 @@ export const View: FC<ViewProps> = ({ directory, index, style = undefined }) => 
     const { onOpen } = useContextMenu()
     const { isRenameExists, closeRenameInput, onRename } = useContextRename()
     const { handleExpand } = useDirectories()
-    const { isActive: isRenameActive, id: renameId } = contextRename
-    const isRenameOpen = isRenameActive && renameId === id
+    const { isActive: isRenameActive, path: renamePath } = contextRename
+    const isRenameOpen = isRenameActive && renamePath === path
 
     const handleOnClick = (e: MouseEvent<HTMLDivElement>) => {
         e.stopPropagation()
@@ -38,7 +38,7 @@ export const View: FC<ViewProps> = ({ directory, index, style = undefined }) => 
         e.preventDefault()
         e.stopPropagation()
         const { pageX, pageY } = e
-        onOpen({ kind, path, depth, id, index }, { isActive: true, pageX, pageY })
+        onOpen({ ...directory, index }, { isActive: true, pageX, pageY })
     }
 
     const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -50,7 +50,7 @@ export const View: FC<ViewProps> = ({ directory, index, style = undefined }) => 
     const handleOnCloseRename = async () => {
         if (inputValue !== name) {
             try {
-                await onRename({ path, newPath: renamePath(path, inputValue), id, depth })
+                await onRename({ ...directory, newPath: renamePathByNewName(path, inputValue), newName: inputValue })
             } catch (e) {
                 setInput(name)
                 setIsError(false)
@@ -74,7 +74,7 @@ export const View: FC<ViewProps> = ({ directory, index, style = undefined }) => 
                 onClick={handleOnClick}
                 onContextMenu={isRenameOpen ? (e) => e.preventDefault() : handleOnContextMenu}
                 isResizing={isResizing}
-                isActive={contextEntity.id === id}
+                isActive={contextEntity.path === path}
                 style={{ ...style, paddingLeft: `${depth ? depth * 20 : 5}px` }}
             >
                 <Icon as={FcFolder} />

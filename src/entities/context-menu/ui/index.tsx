@@ -44,7 +44,7 @@ export const View = () => {
         body,
     } = theme
     const { pageX, pageY, isActive } = contextMenu
-    const { kind, path, id } = contextEntity
+    const { kind, path } = contextEntity
     const isFolder = kind === 'directory'
     const name = isFolder ? 'Folder' : 'File'
     useOutsideClick({ ref: elementRef, handler: isOpenModal ? undefined : onClose })
@@ -60,7 +60,7 @@ export const View = () => {
     }
 
     const handleOpenRenameInput = () => {
-        openRenameInput({ path, name: getFilenameByPath(path), id, isActive: true })
+        openRenameInput({ path })
         onClose()
     }
 

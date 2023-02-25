@@ -1,5 +1,6 @@
 import { atom, useAtom } from 'jotai'
 import { useCallback } from 'react'
+import { IFileNode } from '@shared/types'
 
 interface IContextMenu {
     isActive: boolean
@@ -7,32 +8,17 @@ interface IContextMenu {
     pageY: number
 }
 
-export interface IContextEntity {
-    kind: string
-    path: string
-    id: string
-    depth: number
+export interface IContextEntity extends IFileNode {
     index?: number
 }
 
-interface IContextCreate {
-    path: string
-    name: string
-    isActive: boolean
-}
-
-const initialCreate: IContextCreate = {
-    path: '',
-    name: '',
-    isActive: false,
-}
-
 const initialEntity: IContextEntity = {
-    kind: '',
+    index: 0,
+    kind: 'file',
+    name: '',
     path: '',
     id: '',
     depth: 0,
-    index: 0,
 }
 const initialMenu: IContextMenu = {
     isActive: false,
@@ -45,7 +31,6 @@ const menuDirectorySize = 120
 
 export const contextEntityAtom = atom<IContextEntity>(initialEntity)
 export const contextMenuAtom = atom<IContextMenu>(initialMenu)
-export const contextCreateAtom = atom<IContextCreate>(initialCreate)
 
 export const useContextMenu = () => {
     const [, setContextEntity] = useAtom(contextEntityAtom)

@@ -14,19 +14,19 @@ interface ViewProps {
 }
 
 export const View: FC<ViewProps> = ({ file }) => {
-    const { id } = file
+    const { id, path } = file
     const { selectedFile } = useFiles()
     const [theme] = useAtom(themeAtom)
     const editorRef = useRef<EditorView | null>(null)
-    const visibility = selectedFile.id === id ? 'visible' : 'hidden'
-    const height = selectedFile.id === id ? '100%' : '0'
+    const visibility = selectedFile.path === path ? 'visible' : 'hidden'
+    const height = selectedFile.path === path ? '100%' : '0'
 
     const updateEditorContent = async () => {
         const element = document.getElementById(id)
 
-        if (!element || selectedFile.id !== id) return
+        if (!element || selectedFile.path !== path) return
 
-        const content = await readFile(selectedFile.path.slice(0, -1))
+        const content = await readFile(selectedFile.path)
 
         editorRef.current = new EditorView({
             doc: content,

@@ -9,11 +9,11 @@ interface ViewProps {
 }
 
 export const View: FC<ViewProps> = ({ file }) => {
-    const { id } = file
+    const { path } = file
     const { selectedFile } = useFiles()
     const imgRef = useRef<HTMLImageElement>(null)
-    const height = selectedFile.id === id ? '100%' : '0'
-    const visibility = selectedFile.id === id ? 'visible' : 'hidden'
+    const height = selectedFile.path === path ? '100%' : '0'
+    const visibility = selectedFile.path === path ? 'visible' : 'hidden'
 
     return (
         <Flex h={height} visibility={visibility} alignItems={'center'} justifyContent={'center'}>

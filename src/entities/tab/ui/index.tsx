@@ -16,17 +16,17 @@ export const View: FC<ViewProps> = ({ file }) => {
     const {
         tabs: { item, active },
     } = theme
-    const { name, id } = file
+    const { name, path } = file
     const { selectFile, closeFile, selectedFile } = useFiles()
-    const isSelected = selectedFile.id === id
+    const isSelected = selectedFile.path === path
 
     const handleSelectFile = () => {
-        selectFile(file, true)
+        selectFile({ ...file }, true)
     }
 
     const handleCloseFile = useCallback((e: MouseEvent<HTMLDivElement>) => {
         e.stopPropagation()
-        closeFile(file)
+        closeFile({ ...file })
     }, [])
 
     return (

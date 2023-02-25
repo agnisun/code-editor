@@ -1,24 +1,25 @@
 import { useCallback } from 'react'
-import { getFilenameByPath } from '@shared/lib/get-filename'
 import { renameFile } from '@shared/lib/filesys'
 import { atom, useAtom } from 'jotai'
 import { openedNodesAtom } from '@entities/source'
+import { IFileNode } from '@shared/types'
 
 interface IContextRename {
-    path: string
-    id: string
-    name: string
     isActive: boolean
+    path: string
 }
 
-const initialRename: IContextRename = {
-    id: '',
-    name: '',
-    path: '',
+interface IRenameEntity extends IFileNode {
+    newPath: string
+    newName: string
+}
+
+const initialContextRename = {
     isActive: false,
+    path: '',
 }
 
-export const contextRenameAtom = atom<IContextRename>(initialRename)
+export const contextRenameAtom = atom<IContextRename>(initialContextRename)
 
 export const useContextRename = () => {
     const [openedNodes, setOpenedNodes] = useAtom(openedNodesAtom)
@@ -41,16 +42,16 @@ export const useContextRename = () => {
     )
 
     const closeRenameInput = useCallback(() => {
-        setContextRename(initialRename)
+        setContextRename(initialContextRename)
     }, [])
 
-    const openRenameInput = useCallback((entity: IContextRename) => {
-        setContextRename(entity)
+    const openRenameInput = useCallback(({ path }: { path: string }) => {
+        setContextRename({ path, isActive: true })
     }, [])
 
     const onRename = useCallback(
-        async ({ path, newPath, id, depth }: { path: string; newPath: string; id: string; depth: number }) => {
-            const newName = getFilenameByPath(newPath)
+        async (entity: IRenameEntity) => {
+            const { newName, depth, path, newPath } = entity
 
             for (let i = 0; i < openedNodes.length; i++) {
                 const node = openedNodes[i]
@@ -65,7 +66,7 @@ export const useContextRename = () => {
             setOpenedNodes((nodes) => {
                 return nodes.map((node) => {
                     if (depth === node.depth) {
-                        if (node.id === id) return { ...node, path: newPath, name: newName }
+                        if (node.path === path) return { ...node, path: newPath, name: newName }
                     }
 
                     return node

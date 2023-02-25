@@ -6,7 +6,7 @@ import { useAtom } from 'jotai'
 import { isResizingAtom } from '@entities/navbar'
 import { useFiles } from '@entities/file'
 import { contextEntityAtom, contextRenameAtom, useContextMenu, useContextRename } from '@entities/context-menu/model'
-import { renamePath } from '@entities/context-menu/lib/rename-path'
+import { renamePathByNewName } from '@entities/context-menu/lib/rename-path'
 
 interface ViewProps {
     file: IFile
@@ -14,7 +14,7 @@ interface ViewProps {
 }
 
 export const View: FC<ViewProps> = ({ file, style = undefined }) => {
-    const { depth, name, id, kind, path } = file
+    const { depth, name, path } = file
     const [isError, setIsError] = useState<boolean>(false)
     const [inputValue, setInput] = useState<string>(name)
     const inputRef = useRef<HTMLInputElement>(null)
@@ -24,20 +24,20 @@ export const View: FC<ViewProps> = ({ file, style = undefined }) => {
     const { onOpen } = useContextMenu()
     const { selectFile, selectedFile } = useFiles()
     const { isRenameExists, closeRenameInput, onRename } = useContextRename()
-    const { isActive: isRenameActive, id: renameId } = contextRename
-    const isSelected = selectedFile.id === id
-    const isRenameOpen = isRenameActive && renameId === id
+    const { isActive: isRenameActive, path: renamePath } = contextRename
+    const isSelected = selectedFile.path === path
+    const isRenameOpen = isRenameActive && renamePath === path
 
     const handleSelectFile = (e: ReactMouseEvent<HTMLDivElement>) => {
         e.stopPropagation()
-        selectFile({ ...file, path: file.path + '/' })
+        selectFile({ ...file })
     }
 
     const handleOnContextMenu = (e: ReactMouseEvent<HTMLDivElement>) => {
         e.preventDefault()
         e.stopPropagation()
         const { pageX, pageY } = e
-        onOpen({ kind, path, depth, id }, { isActive: true, pageX, pageY })
+        onOpen({ ...file }, { isActive: true, pageX, pageY })
     }
 
     const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -49,7 +49,7 @@ export const View: FC<ViewProps> = ({ file, style = undefined }) => {
     const handleOnCloseRename = async () => {
         if (inputValue !== name) {
             try {
-                await onRename({ path, newPath: renamePath(path, inputValue), id, depth })
+                await onRename({ ...file, newPath: renamePathByNewName(path, inputValue), newName: inputValue })
             } catch (e) {
                 setInput(name)
                 setIsError(false)
@@ -72,7 +72,7 @@ export const View: FC<ViewProps> = ({ file, style = undefined }) => {
             <FileContainer
                 isResizing={isResizing}
                 isSelected={isSelected}
-                isActive={contextEntity.id === id}
+                isActive={contextEntity.path === path}
                 onContextMenu={isRenameOpen ? (e) => e.preventDefault() : handleOnContextMenu}
                 onClick={handleSelectFile}
                 style={{ ...style, paddingLeft: `${depth ? depth * 20 : 5}px` }}

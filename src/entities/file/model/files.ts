@@ -22,7 +22,7 @@ export const useFiles = () => {
         (file: IFile, open?: boolean) => {
             const addToHistory = () =>
                 void setHistoryTabs((prev) => {
-                    if (prev.at(-1)?.id !== file.id) return [...prev, file]
+                    if (prev.at(-1)?.path !== file.path) return [...prev, file]
 
                     return prev
                 })
@@ -33,8 +33,8 @@ export const useFiles = () => {
             }
 
             for (let i = 0; i < selectedFiles.length; i++) {
-                if (selectedFiles[i].id === file.id) {
-                    if (selectedFile.id !== file.id) {
+                if (selectedFiles[i].path === file.path) {
+                    if (selectedFile.path !== file.path) {
                         addToHistory()
                     }
                     return
@@ -48,8 +48,8 @@ export const useFiles = () => {
     )
 
     const closeFile = useCallback((file: IFile) => {
-        setSelectedFiles((selectedFiles) => selectedFiles.filter((el) => el.id !== file.id))
-        setHistoryTabs((historyTabs) => historyTabs.filter((el) => el.id !== file.id))
+        setSelectedFiles((selectedFiles) => selectedFiles.filter((el) => el.path !== file.path))
+        setHistoryTabs((historyTabs) => historyTabs.filter((el) => el.path !== file.path))
     }, [])
 
     return { selectFile, closeFile, selectedFile }
