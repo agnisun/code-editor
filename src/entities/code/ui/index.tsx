@@ -14,7 +14,7 @@ interface ViewProps {
 }
 
 export const View: FC<ViewProps> = ({ file }) => {
-    const { id, path } = file
+    const { path } = file
     const { selectedFile } = useFiles()
     const [theme] = useAtom(themeAtom)
     const editorRef = useRef<EditorView | null>(null)
@@ -22,7 +22,7 @@ export const View: FC<ViewProps> = ({ file }) => {
     const height = selectedFile.path === path ? '100%' : '0'
 
     const updateEditorContent = async () => {
-        const element = document.getElementById(id)
+        const element = document.getElementById(path)
 
         if (!element || selectedFile.path !== path) return
 
@@ -39,5 +39,5 @@ export const View: FC<ViewProps> = ({ file }) => {
         updateEditorContent()
     }, [selectedFile])
 
-    return <Box as={'main'} id={id} visibility={visibility} height={height} />
+    return <Box as={'main'} id={path} visibility={visibility} height={height} />
 }

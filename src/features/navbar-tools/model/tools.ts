@@ -31,14 +31,14 @@ export const useTools = () => {
     const collapseAllDirectories = useCallback(() => {
         const formattedFiles = formatDirectory(project, (dir) => {
             if (dir.kind === 'directory') {
-                dir.collapsed = true
+                dir.expanded = false
             }
 
             return dir
         })
 
         if (formattedFiles.length !== openedNodes.length) {
-            setOpenedNodes(formattedFiles)
+            setOpenedNodes(() => formattedFiles)
         }
     }, [openedNodes])
 

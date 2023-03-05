@@ -3,6 +3,7 @@ import { renameFile } from '@shared/lib/filesys'
 import { atom, useAtom } from 'jotai'
 import { openedNodesAtom } from '@entities/source'
 import { IFileNode } from '@shared/types'
+import { isFileExists } from '@shared/lib/is-file-exists'
 
 interface IContextRename {
     isActive: boolean
@@ -26,17 +27,8 @@ export const useContextRename = () => {
     const [, setContextRename] = useAtom(contextRenameAtom)
 
     const isRenameExists = useCallback(
-        (newName: string, depth: number): boolean => {
-            for (let i = 0; i < openedNodes.length; i++) {
-                const node = openedNodes[i]
-                if (node.depth === depth) {
-                    if (node.name === newName) {
-                        return true
-                    }
-                }
-            }
-
-            return false
+        (parentPath: string, newName: string, depth: number): boolean => {
+            return isFileExists(openedNodes, parentPath, newName, depth)
         },
         [openedNodes]
     )
@@ -50,19 +42,15 @@ export const useContextRename = () => {
     }, [])
 
     const onRename = useCallback(
-        async (entity: IRenameEntity) => {
+        async (entity: IRenameEntity, parentPath: string) => {
             const { newName, depth, path, newPath } = entity
 
-            for (let i = 0; i < openedNodes.length; i++) {
-                const node = openedNodes[i]
-                if (node.depth === depth) {
-                    if (node.name === newName) {
-                        throw new Error('This name is already exists')
-                    }
-                }
+            if (isFileExists(openedNodes, parentPath, newName, depth)) {
+                throw new Error('This name is already exists')
             }
 
             await renameFile(path, newPath)
+            // сделать с setOpenedNodes()
             setOpenedNodes((nodes) => {
                 return nodes.map((node) => {
                     if (depth === node.depth) {

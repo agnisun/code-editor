@@ -10,8 +10,8 @@ export const useDirectories = () => {
 
     const expandDirectory = useCallback(async (directory: IDirectory, index: number) => {
         const children = await readDirectory(directory.path + '/')
-        directory.collapsed = false
         setOpenedNodes((openedNodes) => {
+            openedNodes[index].expanded = true
             const start = openedNodes.slice(0, index + 1)
             const end = openedNodes.slice(index + 1)
             const formattedChildren = formatDirectory(children, (file) => ({
@@ -34,8 +34,8 @@ export const useDirectories = () => {
                 }
             }
 
-            directory.collapsed = true
             setOpenedNodes((openedNodes) => {
+                openedNodes[index].expanded = false
                 const start = openedNodes.slice(0, index + 1)
                 const end = openedNodes.slice(nextNodeIndex + 1)
 
@@ -46,10 +46,10 @@ export const useDirectories = () => {
     )
 
     const handleExpand = useCallback((directory: IDirectory, index: number) => {
-        if (directory.collapsed) {
-            expandDirectory(directory, index)
+        if (!directory.expanded) {
+            expandDirectory({ ...directory }, index)
         } else {
-            collapseDirectory(directory, index)
+            collapseDirectory({ ...directory }, index)
         }
     }, [])
 

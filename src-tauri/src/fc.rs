@@ -16,7 +16,7 @@ pub struct Directory {
     kind: String,
     path: String,
     id: String,
-    collapsed: bool,
+    expanded: bool,
     depth: i32,
 }
 
@@ -55,7 +55,7 @@ pub fn read_directory(dir_path: &str) -> Project {
                 kind,
                 path,
                 id,
-                collapsed: true,
+                expanded: false,
                 depth: 0
             };
 

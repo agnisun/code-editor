@@ -43,14 +43,17 @@ export const View: FC<ViewProps> = ({ directory, index, style = undefined }) => 
 
     const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
         const value = e.currentTarget.value
-        setIsError(isRenameExists(value, depth))
+        setIsError(isRenameExists(contextEntity.path, value, depth))
         setInput(value)
     }
 
     const handleOnCloseRename = async () => {
         if (inputValue !== name) {
             try {
-                await onRename({ ...directory, newPath: renamePathByNewName(path, inputValue), newName: inputValue })
+                await onRename(
+                    { ...directory, newPath: renamePathByNewName(path, inputValue), newName: inputValue },
+                    contextEntity.path
+                )
             } catch (e) {
                 setInput(name)
                 setIsError(false)
@@ -66,7 +69,9 @@ export const View: FC<ViewProps> = ({ directory, index, style = undefined }) => 
         }
     }
 
-    useOutsideClick({ ref: inputRef, handler: isRenameOpen ? handleOnCloseRename : undefined })
+    const handler = isRenameOpen ? handleOnCloseRename : undefined
+
+    useOutsideClick({ ref: inputRef, handler })
 
     return (
         <>
@@ -88,7 +93,7 @@ export const View: FC<ViewProps> = ({ directory, index, style = undefined }) => 
                         fontSize={'18px'}
                         borderRadius={0}
                         p={0}
-                        h={'32px'}
+                        h={'33px'}
                         border={0}
                         autoFocus
                         onClick={(e) => e.stopPropagation()}

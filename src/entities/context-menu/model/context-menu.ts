@@ -17,7 +17,6 @@ const initialEntity: IContextEntity = {
     kind: 'file',
     name: '',
     path: '',
-    id: '',
     depth: 0,
 }
 const initialMenu: IContextMenu = {

@@ -39,7 +39,7 @@ export const View = () => {
                             itemCount={openedNodes.length}
                             itemSize={32}
                             width={width}
-                            itemKey={(index) => openedNodes[index].id}
+                            itemKey={(index) => openedNodes[index].path}
                             className={'main-scroll'}
                             style={{ overflow: isActive ? 'hidden' : 'auto' }}
                         >

@@ -8,9 +8,12 @@ import {
     useDeleteFile,
 } from '@entities/context-menu/model'
 import { themeAtom } from '@entities/theme'
-import { FC, useRef } from 'react'
+import { FC, useRef, useState } from 'react'
 import { ConfirmModal } from '@entities/context-menu/ui/modals/confirm-modal'
 import { getFilenameByPath } from '@shared/lib/get-filename'
+import { useDirectories } from '@entities/directory/model'
+import { IDirectory } from '@shared/types'
+import { CreateModal } from '@entities/context-menu/ui/modals/create-modal'
 
 interface ContextItemProps {
     children: JSX.Element
@@ -35,8 +38,11 @@ export const View = () => {
     const elementRef = useRef<HTMLDivElement>(null)
     const [contextEntity] = useAtom(contextEntityAtom)
     const [contextMenu] = useAtom(contextMenuAtom)
-    const { onOpen: onOpenModal, isOpen: isOpenModal, onClose: onCloseModal } = useDisclosure()
+    const [createKind, setCreateKind] = useState<'file' | 'directory'>('file')
+    const confirmModal = useDisclosure()
+    const createModal = useDisclosure()
     const { onClose } = useContextMenu()
+    const { handleExpand } = useDirectories()
     const { openRenameInput } = useContextRename()
     const { onDeleteFile, onDeleteDir } = useDeleteFile(onClose)
     const {
@@ -44,10 +50,10 @@ export const View = () => {
         body,
     } = theme
     const { pageX, pageY, isActive } = contextMenu
-    const { kind, path } = contextEntity
+    const { kind, path, expanded } = contextEntity
     const isFolder = kind === 'directory'
     const name = isFolder ? 'Folder' : 'File'
-    useOutsideClick({ ref: elementRef, handler: isOpenModal ? undefined : onClose })
+    useOutsideClick({ ref: elementRef, handler: confirmModal.isOpen || createModal.isOpen ? undefined : onClose })
 
     const handleOnDelete = () => {
         if (isFolder) onDeleteDir(contextEntity)
@@ -55,12 +61,34 @@ export const View = () => {
         onClose()
     }
 
-    const handleOnClose = () => {
-        onCloseModal()
+    const handleOnCloseConfirm = () => {
+        confirmModal.onClose()
     }
 
-    const handleOpenRenameInput = () => {
+    const handleOnRename = () => {
         openRenameInput({ path })
+        onClose()
+    }
+
+    const onCreate = (kind: 'file' | 'directory') => {
+        if (!expanded) {
+            const { index, ...directory } = contextEntity
+            handleExpand(directory as IDirectory, index as number)
+        }
+        createModal.onOpen()
+        setCreateKind(kind)
+    }
+
+    const handleOnCreateFile = () => {
+        onCreate('file')
+    }
+
+    const handleOnCreateDir = () => {
+        onCreate('directory')
+    }
+
+    const handleOnCloseCreate = () => {
+        createModal.onClose()
         onClose()
     }
 
@@ -85,19 +113,19 @@ export const View = () => {
                         <Box>
                             {isFolder && (
                                 <Box borderBottom={`1px solid ${borders.color}`} pb={'5px'} mb={'5px'}>
-                                    <ContextItem>
+                                    <ContextItem onClick={handleOnCreateFile}>
                                         <Box>New File...</Box>
                                     </ContextItem>
-                                    <ContextItem>
+                                    <ContextItem onClick={handleOnCreateDir}>
                                         <Box>New Folder...</Box>
                                     </ContextItem>
                                 </Box>
                             )}
                             <Box>
-                                <ContextItem onClick={handleOpenRenameInput}>
+                                <ContextItem onClick={handleOnRename}>
                                     <Box>Rename {name}</Box>
                                 </ContextItem>
-                                <ContextItem onClick={onOpenModal}>
+                                <ContextItem onClick={confirmModal.onOpen}>
                                     <Box>Delete {name}</Box>
                                 </ContextItem>
                             </Box>
@@ -105,10 +133,16 @@ export const View = () => {
                     </Box>
                 )}
             </Portal>
+            <CreateModal
+                kind={createKind}
+                isOpen={createModal.isOpen}
+                onConfirm={handleOnCloseCreate}
+                onClose={createModal.onClose}
+            />
             <ConfirmModal
                 onConfirm={handleOnDelete}
-                onClose={handleOnClose}
-                isOpen={isOpenModal}
+                onClose={handleOnCloseConfirm}
+                isOpen={confirmModal.isOpen}
                 text={`Are you sure you want to delete '${getFilenameByPath(path)}'${
                     isFolder ? ' and its contents' : ''
                 }?`}

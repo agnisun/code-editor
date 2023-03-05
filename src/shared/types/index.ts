@@ -8,8 +8,7 @@ export interface IDirectory {
     name: string
     kind: 'directory'
     path: string
-    id: string
-    collapsed: boolean
+    expanded: boolean
     depth: number
 }
 
@@ -17,12 +16,11 @@ export interface IFile {
     name: string
     kind: 'file'
     path: string
-    id: string
     depth: number
 }
 
-export type OmitDirectory = Omit<IDirectory, 'kind' | 'collapsed'>
+export type OmitDirectory = Omit<IDirectory, 'kind' | 'expanded'>
 export interface IFileNode extends OmitDirectory {
     kind: 'file' | 'directory'
-    collapsed?: boolean
+    expanded?: boolean
 }
