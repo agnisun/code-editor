@@ -26,7 +26,7 @@ export const View = () => {
             h={'47px'}
         >
             {selectedFiles.map((file) => (
-                <TabItem key={file.id} file={file} />
+                <TabItem key={file.path} file={file} />
             ))}
         </Flex>
     )

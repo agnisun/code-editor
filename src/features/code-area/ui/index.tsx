@@ -27,9 +27,9 @@ export const View = () => {
     return (
         <Box height={'calc(100vh - 131px)'} bg={body.background} key={theme.id}>
             {selectedFiles.map((file) => {
-                if (isImage(file)) return <PreviewImage key={file.id} file={file} />
+                if (isImage(file)) return <PreviewImage key={file.path} file={file} />
 
-                return <CodeItem key={file.id} file={file} />
+                return <CodeItem key={file.path} file={file} />
             })}
         </Box>
     )
