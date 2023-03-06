@@ -10,11 +10,12 @@ import { renamePathByNewName } from '@entities/context-menu/lib/rename-path'
 
 interface ViewProps {
     file: IFile
+    index: number
     style?: CSSProperties
 }
 
-export const View: FC<ViewProps> = ({ file, style = undefined }) => {
-    const { depth, name, path } = file
+export const View: FC<ViewProps> = ({ file, index, style = undefined }) => {
+    const { depth, name, path, parent } = file
     const [isError, setIsError] = useState<boolean>(false)
     const [inputValue, setInput] = useState<string>(name)
     const inputRef = useRef<HTMLInputElement>(null)
@@ -42,17 +43,14 @@ export const View: FC<ViewProps> = ({ file, style = undefined }) => {
 
     const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
         const value = e.currentTarget.value
-        setIsError(isRenameExists(contextEntity.path, value, depth))
+        setIsError(isRenameExists(parent, name, value, depth))
         setInput(value)
     }
 
     const handleOnCloseRename = async () => {
         if (inputValue !== name) {
             try {
-                await onRename(
-                    { ...file, newPath: renamePathByNewName(path, inputValue), newName: inputValue },
-                    contextEntity.path
-                )
+                await onRename({ ...file, newPath: renamePathByNewName(path, inputValue), newName: inputValue }, index)
             } catch (e) {
                 setInput(name)
                 setIsError(false)

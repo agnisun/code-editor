@@ -1,7 +1,6 @@
 use serde::{Deserialize, Serialize};
 use std::{fs};
 use std::path::Path;
-use uuid::Uuid;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Project {
@@ -15,9 +14,9 @@ pub struct Directory {
     name: String,
     kind: String,
     path: String,
-    id: String,
     expanded: bool,
     depth: i32,
+    parent: String
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -25,8 +24,8 @@ pub struct File {
     name: String,
     kind: String,
     path: String,
-    id: String,
     depth: i32,
+    parent: String
 }
 
 pub fn read_directory(dir_path: &str) -> Project {
@@ -45,7 +44,8 @@ pub fn read_directory(dir_path: &str) -> Project {
         };
         let path = dir_path.to_owned() + &name;
         let mut kind = String::from("file");
-        let id = Uuid::new_v4().to_string();
+        let mut parent = dir_path.to_owned();
+        parent.pop();
         
         if entry_path.is_dir() {
             kind = String::from("directory");
@@ -54,7 +54,7 @@ pub fn read_directory(dir_path: &str) -> Project {
                 name,
                 kind,
                 path,
-                id,
+                parent,
                 expanded: false,
                 depth: 0
             };
@@ -65,7 +65,7 @@ pub fn read_directory(dir_path: &str) -> Project {
                 name,
                 kind,
                 path,
-                id,
+                parent,
                 depth: 0
             };
 

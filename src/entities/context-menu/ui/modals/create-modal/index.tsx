@@ -16,7 +16,7 @@ import { themeAtom } from '@entities/theme'
 import { FileIcon } from '@shared/ui'
 import { FcFolder } from 'react-icons/fc'
 import { contextEntityAtom, useContextCreate } from '@entities/context-menu'
-import { useDirectories } from '@entities/directory/model'
+import { IFileNode } from '@shared/types'
 
 interface CreateModalProps {
     isOpen: boolean
@@ -44,11 +44,16 @@ export const CreateModal: FC<CreateModalProps> = ({ isOpen, onConfirm, onClose, 
     }
 
     const handleOnCreate = async () => {
+        const newNode: IFileNode = {
+            name: input,
+            depth: depth + 1,
+            kind,
+            path: path + '/' + input,
+            parent: path,
+        }
+
         try {
-            await onCreate(
-                { name: input, depth: depth + 1, kind, path: path + '/' + input, index: index as number },
-                path
-            )
+            await onCreate(newNode, index as number)
             onConfirm()
         } catch (e) {
             console.log(e)

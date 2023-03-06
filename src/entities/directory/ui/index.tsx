@@ -16,7 +16,7 @@ interface ViewProps {
 }
 
 export const View: FC<ViewProps> = ({ directory, index, style = undefined }) => {
-    const { depth, name, path } = directory
+    const { depth, name, path, parent } = directory
     const [isError, setIsError] = useState<boolean>(false)
     const [inputValue, setInput] = useState<string>(name)
     const inputRef = useRef<HTMLInputElement>(null)
@@ -43,7 +43,7 @@ export const View: FC<ViewProps> = ({ directory, index, style = undefined }) => 
 
     const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
         const value = e.currentTarget.value
-        setIsError(isRenameExists(contextEntity.path, value, depth))
+        setIsError(isRenameExists(parent, name, value, depth))
         setInput(value)
     }
 
@@ -52,7 +52,7 @@ export const View: FC<ViewProps> = ({ directory, index, style = undefined }) => 
             try {
                 await onRename(
                     { ...directory, newPath: renamePathByNewName(path, inputValue), newName: inputValue },
-                    contextEntity.path
+                    index
                 )
             } catch (e) {
                 setInput(name)

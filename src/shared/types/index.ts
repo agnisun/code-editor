@@ -10,6 +10,7 @@ export interface IDirectory {
     path: string
     expanded: boolean
     depth: number
+    parent: string
 }
 
 export interface IFile {
@@ -17,6 +18,7 @@ export interface IFile {
     kind: 'file'
     path: string
     depth: number
+    parent: string
 }
 
 export type OmitDirectory = Omit<IDirectory, 'kind' | 'expanded'>

@@ -2,45 +2,33 @@ import { useAtom } from 'jotai'
 import { useCallback } from 'react'
 import { openedNodesAtom } from '@entities/source'
 import { isFileExists } from '@shared/lib/is-file-exists'
-import { createDir, createFile, readDirectory } from '@shared/lib/filesys'
-import { formatDirectory } from '@shared/lib/format-directory'
+import { createDir, createFile } from '@shared/lib/filesys'
+import { IFileNode } from '@shared/types'
+import { getCurrentIndex } from '@entities/context-menu/lib/get-current-index'
 
 export const useContextCreate = () => {
     const [openedNodes, setOpenedNodes] = useAtom(openedNodesAtom)
 
     const isCreateExists = useCallback(
         (parentPath: string, name: string, depth: number) => {
-            return isFileExists(openedNodes, parentPath, name, depth)
+            return isFileExists(openedNodes, { parentPath, depth, newName: name })
         },
         [openedNodes]
     )
 
     const onCreate = useCallback(
-        async (
-            entity: { path: string; name: string; depth: number; kind: 'file' | 'directory'; index: number },
-            dirPath: string
-        ) => {
-            const { name, depth, kind, path } = entity
-            const { index, ...newNode } = entity
+        async (entity: IFileNode, index: number) => {
+            const { name, depth, kind, path, parent } = entity
 
-            if (isFileExists(openedNodes, dirPath, name, depth)) {
+            if (isFileExists(openedNodes, { parentPath: parent, depth, newName: name })) {
                 throw new Error('This name is already exists')
             }
 
-            if (!name.length) throw new Error('Name is empty')
-
             await (kind === 'file' ? createFile : createDir)(path)
-            const dirFiles = formatDirectory(await readDirectory(dirPath + '/'))
-            let startIndex = -1
-
-            for (let i = 0; i < dirFiles.length; i++) {
-                if (dirFiles[i].path === path) {
-                    startIndex = i
-                }
-            }
+            const startIndex = await getCurrentIndex(parent + '/', path)
 
             setOpenedNodes((openedNodes) => {
-                openedNodes.splice(startIndex + index + 1, 0, newNode)
+                openedNodes.splice(startIndex + index + 1, 0, entity)
                 return openedNodes
             })
         },

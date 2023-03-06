@@ -1,6 +1,17 @@
 import { IFileNode } from '@shared/types'
 
-export const isFileExists = (nodes: IFileNode[], parentPath: string, name: string, depth: number): boolean => {
+export const isFileExists = (
+    nodes: IFileNode[],
+    file: {
+        parentPath: string
+        name?: string
+        newName: string
+        depth: number
+    }
+): boolean => {
+    const { newName, parentPath, name, depth } = file
+    if (!newName.trim().length) return true
+
     for (let i = 0; i < nodes.length; i++) {
         const node = nodes[i]
         if (node.path === parentPath) {
@@ -10,8 +21,14 @@ export const isFileExists = (nodes: IFileNode[], parentPath: string, name: strin
                 const currentNode = nodes[index]
 
                 if (currentNode.depth === depth) {
-                    if (currentNode.name.trim() === name.trim()) {
-                        return true
+                    if (name) {
+                        if (currentNode.name !== name && currentNode.name === newName.trim()) {
+                            return true
+                        }
+                    } else {
+                        if (currentNode.name === newName.trim()) {
+                            return true
+                        }
                     }
                 }
                 index++

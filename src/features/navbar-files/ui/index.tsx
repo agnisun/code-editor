@@ -24,7 +24,7 @@ export const View = () => {
                 return <NavbarDirectory index={index} directory={file as IDirectory} style={style} />
             }
 
-            return <NavbarFile file={file as IFile} style={style} />
+            return <NavbarFile index={index} file={file as IFile} style={style} />
         },
         [openedNodes]
     )
