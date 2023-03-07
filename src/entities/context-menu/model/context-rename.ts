@@ -1,11 +1,12 @@
 import { useCallback } from 'react'
 import { renameFile } from '@shared/lib/filesys'
 import { atom, useAtom } from 'jotai'
-import { openedNodesAtom } from '@entities/source'
-import { IFileNode } from '@shared/types'
+import { historyTabsAtom, openedNodesAtom, selectedFilesAtom } from '@entities/source'
+import { IFile, IFileNode } from '@shared/types'
 import { isFileExists } from '@shared/lib/is-file-exists'
 import { getCurrentIndex } from '@entities/context-menu/lib/get-current-index'
 import { getParentIndex } from '@entities/context-menu/lib/get-parent-index'
+import { updatePath } from '@entities/context-menu/lib/update-path'
 
 interface IContextRename {
     isActive: boolean
@@ -25,6 +26,8 @@ const initialContextRename = {
 export const contextRenameAtom = atom<IContextRename>(initialContextRename)
 
 export const useContextRename = () => {
+    const [historyTabs, setHistoryTabs] = useAtom(historyTabsAtom)
+    const [selectedFiles, setSelectedFiles] = useAtom(selectedFilesAtom)
     const [openedNodes, setOpenedNodes] = useAtom(openedNodesAtom)
     const [, setContextRename] = useAtom(contextRenameAtom)
 
@@ -43,15 +46,9 @@ export const useContextRename = () => {
         setContextRename({ path, isActive: true })
     }, [])
 
-    const onRename = useCallback(
+    const updateOpenedNodes = useCallback(
         async (entity: IRenameEntity, index: number) => {
-            const { newName, depth, path, newPath, parent, name, kind, expanded } = entity
-
-            if (isFileExists(openedNodes, { parentPath: parent, name, newName, depth })) {
-                throw new Error('This name is already exists')
-            }
-
-            await renameFile(path, newPath)
+            const { newName, depth, path, newPath, parent, kind, expanded } = entity
 
             const startIndex = await getCurrentIndex(parent + '/', newPath)
             const parentIndex = getParentIndex(openedNodes, index, parent)
@@ -75,18 +72,8 @@ export const useContextRename = () => {
                         endIndex++
                     }
 
-                    const dirContent = newNodes.splice(index, endIndex).map((node) => {
-                        const path = node.path.split('/')
-                        path[path.length - node.depth] = newName
-
-                        const parent = node.parent.split('/')
-                        parent[parent.length - node.depth + 1] = newName
-
-                        node.path = path.join('/')
-                        node.parent = parent.join('/')
-
-                        return node
-                    })
+                    const updateCb = updatePath(newName)
+                    const dirContent = newNodes.splice(index, endIndex).map(updateCb)
                     dirContent.unshift(newNode)
                     newNodes.splice(parentIndex + startIndex + 1, 0, ...dirContent)
                 } else {
@@ -97,6 +84,61 @@ export const useContextRename = () => {
             })
         },
         [openedNodes]
+    )
+
+    const updateSelectedFiles = (entity: IRenameEntity, newName: string) => {
+        const { path } = entity
+        const files = selectedFiles.filter((file) => file.path.slice(0, path.length) === path)
+
+        if (!files.length) return
+        const updateCb = updatePath(newName)
+
+        setSelectedFiles((selectedFiles) => {
+            return selectedFiles.map((file) => {
+                if (files.some((el) => el.path === file.path)) {
+                    return updateCb(file) as IFile
+                }
+
+                return file
+            })
+        })
+    }
+
+    const updateHistoryFiles = (entity: IRenameEntity, newName: string) => {
+        const { path } = entity
+
+        const files = historyTabs.filter((file) => file.path.slice(0, path.length) === path)
+
+        if (!files.length) return
+
+        const updateCb = updatePath(newName)
+
+        setHistoryTabs((historyTabs) => {
+            return historyTabs.map((file) => {
+                if (files.some((el) => el.path === file.path)) {
+                    return updateCb(file) as IFile
+                }
+
+                return file
+            })
+        })
+    }
+
+    const onRename = useCallback(
+        async (entity: IRenameEntity, index: number) => {
+            const { newName, depth, path, newPath, parent, name } = entity
+
+            if (isFileExists(openedNodes, { parentPath: parent, name, newName, depth })) {
+                throw new Error('This name is already exists')
+            }
+
+            await renameFile(path, newPath)
+
+            updateOpenedNodes(entity, index)
+            updateSelectedFiles(entity, newName)
+            updateHistoryFiles(entity, newName)
+        },
+        [openedNodes, selectedFiles]
     )
 
     return { openRenameInput, closeRenameInput, onRename, isRenameExists }
