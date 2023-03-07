@@ -21,10 +21,10 @@ export const View = () => {
             const file = openedNodes[index]
 
             if (file.kind === 'directory') {
-                return <NavbarDirectory index={index} directory={file as IDirectory} style={style} />
+                return <NavbarDirectory key={file.path} index={index} directory={file as IDirectory} style={style} />
             }
 
-            return <NavbarFile index={index} file={file as IFile} style={style} />
+            return <NavbarFile key={file.path} index={index} file={file as IFile} style={style} />
         },
         [openedNodes]
     )
@@ -39,7 +39,6 @@ export const View = () => {
                             itemCount={openedNodes.length}
                             itemSize={32}
                             width={width}
-                            itemKey={(index) => openedNodes[index].path}
                             className={'main-scroll'}
                             style={{ overflow: isActive ? 'hidden' : 'auto' }}
                         >
