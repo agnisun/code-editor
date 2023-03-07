@@ -46,45 +46,42 @@ export const useContextRename = () => {
         setContextRename({ path, isActive: true })
     }, [])
 
-    const updateOpenedNodes = useCallback(
-        async (entity: IRenameEntity, index: number) => {
-            const { newName, depth, path, newPath, parent, kind, expanded } = entity
+    const updateOpenedNodes = async (entity: IRenameEntity, index: number) => {
+        const { newName, depth, path, newPath, parent, kind, expanded } = entity
 
-            const startIndex = await getCurrentIndex(parent + '/', newPath)
-            const parentIndex = getParentIndex(openedNodes, index, parent)
+        const startIndex = await getCurrentIndex(parent + '/', newPath)
+        const parentIndex = getParentIndex(openedNodes, index, parent)
 
-            setOpenedNodes((openedNodes) => {
-                const newNode: IFileNode = {
-                    name: newName,
-                    path: newPath,
-                    expanded,
-                    depth,
-                    kind,
-                    parent,
+        setOpenedNodes((openedNodes) => {
+            const newNode: IFileNode = {
+                name: newName,
+                path: newPath,
+                expanded,
+                depth,
+                kind,
+                parent,
+            }
+
+            const newNodes = openedNodes.filter((node) => node.path !== path)
+
+            if (kind === 'directory' && expanded) {
+                let endIndex = 0
+
+                while (newNodes[index + endIndex].depth > depth) {
+                    endIndex++
                 }
 
-                const newNodes = openedNodes.filter((node) => node.path !== path)
+                const updateCb = updatePath(newName)
+                const dirContent = newNodes.splice(index, endIndex).map(updateCb)
+                dirContent.unshift(newNode)
+                newNodes.splice(parentIndex + startIndex + 1, 0, ...dirContent)
+            } else {
+                newNodes.splice(parentIndex + startIndex + 1, 0, newNode)
+            }
 
-                if (kind === 'directory' && expanded) {
-                    let endIndex = 0
-
-                    while (newNodes[index + endIndex].depth > depth) {
-                        endIndex++
-                    }
-
-                    const updateCb = updatePath(newName)
-                    const dirContent = newNodes.splice(index, endIndex).map(updateCb)
-                    dirContent.unshift(newNode)
-                    newNodes.splice(parentIndex + startIndex + 1, 0, ...dirContent)
-                } else {
-                    newNodes.splice(parentIndex + startIndex + 1, 0, newNode)
-                }
-
-                return newNodes
-            })
-        },
-        [openedNodes]
-    )
+            return newNodes
+        })
+    }
 
     const updateSelectedFiles = (entity: IRenameEntity, newName: string) => {
         const { path } = entity
@@ -138,7 +135,7 @@ export const useContextRename = () => {
             updateSelectedFiles(entity, newName)
             updateHistoryFiles(entity, newName)
         },
-        [openedNodes, selectedFiles]
+        [openedNodes, selectedFiles, historyTabs]
     )
 
     return { openRenameInput, closeRenameInput, onRename, isRenameExists }

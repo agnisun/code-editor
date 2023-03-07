@@ -28,18 +28,10 @@ export const useTools = () => {
         setIsLoading(false)
     }, [])
 
-    const collapseAllDirectories = useCallback(() => {
-        const formattedFiles = formatDirectory(project, (dir) => {
-            if (dir.kind === 'directory') {
-                dir.expanded = false
-            }
+    const collapseAllDirectories = useCallback(async () => {
+        const formattedFiles = formatDirectory(await readDirectory(project.project_path))
 
-            return dir
-        })
-
-        if (formattedFiles.length !== openedNodes.length) {
-            setOpenedNodes(() => formattedFiles)
-        }
+        if (formattedFiles.length !== openedNodes.length) setOpenedNodes(formattedFiles)
     }, [openedNodes])
 
     const hideNavbar = useCallback(() => {
