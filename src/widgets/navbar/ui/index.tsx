@@ -33,7 +33,7 @@ export const View = () => {
     return (
         <Box
             userSelect={'none'}
-            minW={isHide ? '50px' : '190px'}
+            minW={isHide ? '52px' : '190px'}
             w={navbarWidth + 'px'}
             bg={background}
             pos={'relative'}

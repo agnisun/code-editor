@@ -24,8 +24,8 @@ export const useResizeNavbar = () => {
             if (isResizing && navbarRef.current) {
                 if (mouseMoveEvent.clientX < 80) {
                     setIsNavbarHide(true)
-                    setNavbarWidth(50)
-                    setPrevNavbarWidth(50)
+                    setNavbarWidth(52)
+                    setPrevNavbarWidth(52)
                 } else if (mouseMoveEvent.clientX > 180 && mouseMoveEvent.clientX < window.innerWidth - 100) {
                     setIsNavbarHide(false)
                     setNavbarWidth(mouseMoveEvent.clientX - navbarRef.current.getBoundingClientRect().left)

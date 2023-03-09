@@ -3,8 +3,10 @@ import { CollapseButton, FolderButton, HideButton, PlusButton } from './buttons'
 import { useAtom } from 'jotai'
 import { isHideAtom } from '@entities/navbar'
 import { themeAtom } from '@entities/theme'
+import { projectAtom } from '@entities/source'
 
 export const View = () => {
+    const [project] = useAtom(projectAtom)
     const [isHide] = useAtom(isHideAtom)
     const [theme] = useAtom(themeAtom)
     const { borders } = theme
@@ -14,7 +16,7 @@ export const View = () => {
             <Flex justifyContent={'space-between'}>
                 <Flex gap={'5px'}>
                     {!isHide ? <FolderButton /> : <PlusButton />}
-                    <CollapseButton />
+                    {(project.project_path || isHide) && <CollapseButton />}
                 </Flex>
                 <HideButton />
             </Flex>

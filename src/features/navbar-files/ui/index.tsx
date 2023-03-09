@@ -63,11 +63,10 @@ export const View = () => {
                 borderRight={`1px solid ${isMainMenuActive ? '#007FD4' : borders.color}`}
                 borderBottom={`1px solid ${isMainMenuActive ? '#007FD4' : 'transparent'}`}
                 borderLeft={`1px solid ${isMainMenuActive ? '#007FD4' : 'transparent'}`}
-                display={isNavbarHide ? 'none' : 'block'}
                 h={'calc(100vh - 131px)'}
-                onContextMenu={handleOnContextMenu}
+                onContextMenu={project.project_path ? handleOnContextMenu : undefined}
             >
-                <AutoSizer>
+                <AutoSizer style={{ display: isNavbarHide ? 'none' : 'block' }}>
                     {({ height, width }) => (
                         <FixedSizeList
                             height={height}
