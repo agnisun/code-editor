@@ -1,5 +1,5 @@
 import { ChangeEvent, CSSProperties, FC, KeyboardEvent, MouseEvent, useRef, useState } from 'react'
-import { Box, Icon, Input, useOutsideClick } from '@chakra-ui/react'
+import { Box, Flex, Icon, Input, useOutsideClick } from '@chakra-ui/react'
 import { FcFolder } from 'react-icons/fc'
 import { IDirectory } from '@shared/types'
 import { useAtom } from 'jotai'
@@ -8,6 +8,7 @@ import { useDirectories } from '../model'
 import { FileContainer } from '@shared/ui'
 import { contextEntityAtom, contextRenameAtom, useContextMenu, useContextRename } from '@entities/context-menu/model'
 import { renamePathByNewName } from '@entities/context-menu/lib/rename-path'
+import { HiChevronDown, HiChevronRight } from 'react-icons/hi'
 
 interface ViewProps {
     directory: IDirectory
@@ -16,7 +17,7 @@ interface ViewProps {
 }
 
 export const View: FC<ViewProps> = ({ directory, index, style = undefined }) => {
-    const { depth, name, path, parent } = directory
+    const { depth, name, path, parent, expanded } = directory
     const [isError, setIsError] = useState<boolean>(false)
     const [inputValue, setInput] = useState<string>(name)
     const inputRef = useRef<HTMLInputElement>(null)
@@ -82,7 +83,10 @@ export const View: FC<ViewProps> = ({ directory, index, style = undefined }) => 
                 isActive={contextEntity.path === path}
                 style={{ ...style, paddingLeft: `${depth ? depth * 20 : 5}px` }}
             >
-                <Icon as={FcFolder} />
+                <Flex alignItems={'center'} gap={'5px'}>
+                    <Icon as={expanded ? HiChevronDown : HiChevronRight} />
+                    <Icon as={FcFolder} />
+                </Flex>
                 {isRenameOpen ? (
                     <Input
                         focusBorderColor={isError ? 'red.600' : undefined}

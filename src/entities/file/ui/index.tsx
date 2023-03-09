@@ -76,7 +76,7 @@ export const View: FC<ViewProps> = ({ file, index, style = undefined }) => {
                 isActive={contextEntity.path === path}
                 onContextMenu={isRenameOpen ? (e) => e.preventDefault() : handleOnContextMenu}
                 onClick={handleSelectFile}
-                style={{ ...style, paddingLeft: `${depth ? depth * 20 : 5}px` }}
+                style={{ ...style, paddingLeft: `${(depth ? depth * 20 : 5) + 23}px` }}
             >
                 <FileIcon fileName={inputValue} />
                 {isRenameOpen ? (
