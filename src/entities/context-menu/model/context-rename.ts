@@ -71,24 +71,25 @@ export const useContextRename = () => {
                     endIndex++
                 }
 
-                const updateCb = updatePath(newName)
+                const updateCb = updatePath(newName, newPath)
                 const dirContent = newNodes.splice(index, endIndex).map(updateCb)
                 dirContent.unshift(newNode)
                 newNodes.splice(parentIndex + startIndex + 1, 0, ...dirContent)
             } else {
                 newNodes.splice(parentIndex + startIndex + 1, 0, newNode)
             }
+            console.log(newNodes)
 
             return newNodes
         })
     }
 
-    const updateSelectedFiles = (entity: IRenameEntity, newName: string) => {
-        const { path } = entity
+    const updateSelectedFiles = (entity: IRenameEntity) => {
+        const { path, newPath, newName } = entity
         const files = selectedFiles.filter((file) => file.path.slice(0, path.length) === path)
 
         if (!files.length) return
-        const updateCb = updatePath(newName)
+        const updateCb = updatePath(newName, newPath)
 
         setSelectedFiles((selectedFiles) => {
             return selectedFiles.map((file) => {
@@ -101,14 +102,14 @@ export const useContextRename = () => {
         })
     }
 
-    const updateHistoryFiles = (entity: IRenameEntity, newName: string) => {
-        const { path } = entity
+    const updateHistoryFiles = (entity: IRenameEntity) => {
+        const { path, newPath, newName } = entity
 
         const files = historyTabs.filter((file) => file.path.slice(0, path.length) === path)
 
         if (!files.length) return
 
-        const updateCb = updatePath(newName)
+        const updateCb = updatePath(newName, newPath)
 
         setHistoryTabs((historyTabs) => {
             return historyTabs.map((file) => {
@@ -132,8 +133,8 @@ export const useContextRename = () => {
             await renameFile(path, newPath)
 
             updateOpenedNodes(entity, index)
-            updateSelectedFiles(entity, newName)
-            updateHistoryFiles(entity, newName)
+            updateSelectedFiles(entity)
+            updateHistoryFiles(entity)
         },
         [openedNodes, selectedFiles, historyTabs]
     )

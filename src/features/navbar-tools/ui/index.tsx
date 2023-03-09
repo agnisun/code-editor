@@ -10,7 +10,7 @@ export const View = () => {
     const { borders } = theme
 
     return (
-        <Box overflowX={'hidden'} p={'3px 5px'} borderBottom={`1px solid ${borders.color}`}>
+        <Box overflowX={'hidden'} p={'3px 5px'} borderRight={`1px solid ${borders.color}`}>
             <Flex justifyContent={'space-between'}>
                 <Flex gap={'5px'}>
                     {!isHide ? <FolderButton /> : <PlusButton />}

@@ -25,10 +25,12 @@ export const useContextCreate = () => {
             }
 
             await (kind === 'file' ? createFile : createDir)(path)
-            const startIndex = await getCurrentIndex(parent + '/', path)
+            let startIndex = (await getCurrentIndex(parent + '/', path)) + index
+
+            while (openedNodes[startIndex].depth > depth) startIndex++
 
             setOpenedNodes((openedNodes) => {
-                openedNodes.splice(startIndex + index + 1, 0, entity)
+                openedNodes.splice(startIndex + 1, 0, entity)
                 return openedNodes
             })
         },

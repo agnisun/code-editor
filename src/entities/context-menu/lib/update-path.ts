@@ -1,11 +1,13 @@
 import { IFileNode } from '@shared/types'
 
-export const updatePath = (newName: string) => {
+export const updatePath = (newName: string, newPath: string) => {
     return (node: IFileNode) => {
+        const newPathLength = newPath.split('/').length
         const path = node.path.split('/')
-        path[path.length - (node.depth + 1)] = newName
         const parent = node.parent.split('/')
-        parent[parent.length - node.depth + 1] = newName
+
+        path[newPathLength - 1] = newName
+        parent[newPathLength - 1] = newName
 
         node.path = path.join('/')
         node.parent = parent.join('/')

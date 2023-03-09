@@ -14,6 +14,7 @@ import { getFilenameByPath } from '@shared/lib/get-filename'
 import { useDirectories } from '@entities/directory/model'
 import { IDirectory } from '@shared/types'
 import { CreateModal } from '@entities/context-menu/ui/modals/create-modal'
+import { projectAtom } from '@entities/source'
 
 interface ContextItemProps {
     children: JSX.Element
@@ -36,6 +37,7 @@ const ContextItem: FC<ContextItemProps> = ({ children, onClick }) => {
 export const View = () => {
     const [theme] = useAtom(themeAtom)
     const elementRef = useRef<HTMLDivElement>(null)
+    const [project] = useAtom(projectAtom)
     const [contextEntity] = useAtom(contextEntityAtom)
     const [contextMenu] = useAtom(contextMenuAtom)
     const [createKind, setCreateKind] = useState<'file' | 'directory'>('file')
@@ -52,6 +54,7 @@ export const View = () => {
     const { pageX, pageY, isActive } = contextMenu
     const { kind, path, expanded } = contextEntity
     const isFolder = kind === 'directory'
+    const isProjectPath = path === project.project_path
     const name = isFolder ? 'Folder' : 'File'
     useOutsideClick({ ref: elementRef, handler: confirmModal.isOpen || createModal.isOpen ? undefined : onClose })
 
@@ -112,7 +115,11 @@ export const View = () => {
                     >
                         <Box>
                             {isFolder && (
-                                <Box borderBottom={`1px solid ${borders.color}`} pb={'5px'} mb={'5px'}>
+                                <Box
+                                    borderBottom={isProjectPath ? 'none' : `1px solid ${borders.color}`}
+                                    pb={isProjectPath ? '0' : '5px'}
+                                    mb={isProjectPath ? '0' : '5px'}
+                                >
                                     <ContextItem onClick={handleOnCreateFile}>
                                         <Box>New File...</Box>
                                     </ContextItem>
@@ -121,14 +128,16 @@ export const View = () => {
                                     </ContextItem>
                                 </Box>
                             )}
-                            <Box>
-                                <ContextItem onClick={handleOnRename}>
-                                    <Box>Rename {name}</Box>
-                                </ContextItem>
-                                <ContextItem onClick={confirmModal.onOpen}>
-                                    <Box>Delete {name}</Box>
-                                </ContextItem>
-                            </Box>
+                            {!isProjectPath && (
+                                <Box>
+                                    <ContextItem onClick={handleOnRename}>
+                                        <Box>Rename {name}</Box>
+                                    </ContextItem>
+                                    <ContextItem onClick={confirmModal.onOpen}>
+                                        <Box>Delete {name}</Box>
+                                    </ContextItem>
+                                </Box>
+                            )}
                         </Box>
                     </Box>
                 )}

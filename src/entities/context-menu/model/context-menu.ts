@@ -1,6 +1,7 @@
 import { atom, useAtom } from 'jotai'
 import { useCallback } from 'react'
 import { IFileNode } from '@shared/types'
+import { projectAtom } from '@entities/source'
 
 interface IContextMenu {
     isActive: boolean
@@ -18,6 +19,7 @@ const initialEntity: IContextEntity = {
     name: '',
     path: '',
     depth: 0,
+    parent: '',
 }
 const initialMenu: IContextMenu = {
     isActive: false,
@@ -32,16 +34,17 @@ export const contextEntityAtom = atom<IContextEntity>(initialEntity)
 export const contextMenuAtom = atom<IContextMenu>(initialMenu)
 
 export const useContextMenu = () => {
+    const [project] = useAtom(projectAtom)
     const [, setContextEntity] = useAtom(contextEntityAtom)
     const [, setContextMenu] = useAtom(contextMenuAtom)
 
     const onOpen = useCallback((entity: IContextEntity, menu: IContextMenu) => {
-        const { kind } = entity
+        const { kind, path } = entity
         const { pageY } = menu
-        const menuSize = kind === 'file' ? menuFileSize : menuDirectorySize
+        const menuSize = kind === 'file' || project.project_path === path ? menuFileSize : menuDirectorySize
 
         if (menu.pageY + menuSize + 20 > window.innerHeight) {
-            menu.pageY = pageY - 80
+            menu.pageY = pageY - (menuSize === 120 ? 140 : 80)
         }
 
         setContextEntity(entity)
