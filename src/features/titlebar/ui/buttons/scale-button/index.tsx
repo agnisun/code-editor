@@ -14,5 +14,13 @@ export const ScaleButton = () => {
         setIsScaleUp(!isScaleUp)
     }
 
-    return <IconButton onClick={handleOnClick} variant={'titlebar'} aria-label={ariaLabel} icon={<Icon as={icon} />} />
+    return (
+        <IconButton
+            tabIndex={-1}
+            onClick={handleOnClick}
+            variant={'titlebar'}
+            aria-label={ariaLabel}
+            icon={<Icon as={icon} />}
+        />
+    )
 }

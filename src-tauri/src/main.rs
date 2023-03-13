@@ -18,7 +18,7 @@ fn open_folder(dir_path: &str) -> String {
 }
 
 #[tauri::command]
-fn get_file_content(file_path: &str) -> String {
+fn get_file_content(file_path: &str) -> Vec<u8> {
     let content = fc::read_file(file_path);
     content
 }

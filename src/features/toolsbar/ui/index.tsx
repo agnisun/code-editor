@@ -32,6 +32,7 @@ export const View = () => {
                 <Flex gap={'5px'}>
                     <PopoverTrigger>
                         <IconButton
+                            tabIndex={-1}
                             size={'sm'}
                             variant={'toolsbar'}
                             aria-label={'Settings'}

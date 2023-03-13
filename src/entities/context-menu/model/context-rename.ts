@@ -7,6 +7,7 @@ import { isFileExists } from '@shared/lib/is-file-exists'
 import { getCurrentIndex } from '@entities/context-menu/lib/get-current-index'
 import { getParentIndex } from '@entities/context-menu/lib/get-parent-index'
 import { updatePath } from '@entities/context-menu/lib/update-path'
+import { getDirectoryChildsLength } from '@entities/context-menu/lib/get-directory-childs-length'
 
 interface IContextRename {
     isActive: boolean
@@ -49,7 +50,7 @@ export const useContextRename = () => {
     const updateOpenedNodes = async (entity: IRenameEntity, index: number) => {
         const { newName, depth, path, newPath, parent, kind, expanded } = entity
 
-        const startIndex = await getCurrentIndex(parent + '/', newPath)
+        const currentIndex = await getCurrentIndex(parent, newPath)
         const parentIndex = getParentIndex(openedNodes, index, parent)
 
         setOpenedNodes((openedNodes) => {
@@ -63,22 +64,29 @@ export const useContextRename = () => {
             }
 
             const newNodes = openedNodes.filter((node) => node.path !== path)
+            const currentDepthNodes = newNodes.filter((node, i) => {
+                return i >= parentIndex && node.depth === depth
+            })
+
+            let childNodesIndex = 0
+
+            for (let i = 0; i < currentIndex; i++) {
+                const node = currentDepthNodes[i]
+                if (node.kind === 'directory' && node.expanded) {
+                    childNodesIndex += getDirectoryChildsLength(openedNodes, node)
+                }
+            }
 
             if (kind === 'directory' && expanded) {
-                let endIndex = 0
-
-                while (newNodes[index + endIndex].depth > depth) {
-                    endIndex++
-                }
-
+                const endDirIndex = getDirectoryChildsLength(openedNodes, entity)
                 const updateCb = updatePath(newName, newPath)
-                const dirContent = newNodes.splice(index, endIndex).map(updateCb)
+                const dirContent = newNodes.splice(index, endDirIndex).map(updateCb)
+
                 dirContent.unshift(newNode)
-                newNodes.splice(parentIndex + startIndex + 1, 0, ...dirContent)
+                newNodes.splice(currentIndex + parentIndex + childNodesIndex + 1, 0, ...dirContent)
             } else {
-                newNodes.splice(parentIndex + startIndex + 1, 0, newNode)
+                newNodes.splice(currentIndex + parentIndex + childNodesIndex + 1, 0, newNode)
             }
-            console.log(newNodes)
 
             return newNodes
         })

@@ -17,7 +17,7 @@ export const isFileExists = (
         if (node.path === parentPath) {
             let index = i + 1
 
-            while (nodes[index].depth >= depth && nodes[index]) {
+            while (nodes[index] && nodes[index].depth >= depth) {
                 const currentNode = nodes[index]
 
                 if (currentNode.depth === depth) {

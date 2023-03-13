@@ -22,7 +22,7 @@ export const useTools = () => {
         if (!selected) return
 
         if (!isLoading) setIsLoading(true)
-        const project = await readDirectory(selected + '/')
+        const project = await readDirectory(selected as string)
         setProject(project)
         setOpenedNodes(formatDirectory(project))
         setIsLoading(false)

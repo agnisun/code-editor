@@ -9,7 +9,7 @@ export const useDirectories = () => {
     const [openedNodes, setOpenedNodes] = useAtom(openedNodesAtom)
 
     const expandDirectory = useCallback(async (directory: IDirectory, index: number) => {
-        const children = await readDirectory(directory.path + '/')
+        const children = await readDirectory(directory.path)
         setOpenedNodes((openedNodes) => {
             openedNodes[index].expanded = true
             const start = openedNodes.slice(0, index + 1)

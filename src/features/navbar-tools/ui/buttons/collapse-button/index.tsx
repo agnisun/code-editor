@@ -15,6 +15,7 @@ export const CollapseButton = () => {
 
     return (
         <IconButton
+            tabIndex={-1}
             variant={'toolsbar'}
             onClick={handleOnClick}
             icon={<Icon as={BsArrowsCollapse} />}

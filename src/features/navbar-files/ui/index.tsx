@@ -42,15 +42,14 @@ export const View = () => {
         e.stopPropagation()
         const { pageX, pageY } = e
         const projectPath = project.project_path.split('/')
-        projectPath.pop()
 
         const projectDir: IContextEntity = {
-            name: project.project_path.split('/').at(-2) || '',
+            name: projectPath.at(-1) || '',
             kind: 'directory',
-            path: project.project_path,
+            path: projectPath.join('/'),
             expanded: true,
             depth: -1,
-            parent: projectPath.join('/'),
+            parent: projectPath.slice(0, projectPath.length - 1).join('/'),
             index: -1,
         }
         onOpen({ ...projectDir }, { isActive: true, pageX, pageY })

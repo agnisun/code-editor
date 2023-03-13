@@ -11,9 +11,12 @@ export const readDirectory = (dirPath: string): Promise<IProject> => {
 }
 
 export const readFile = (filePath: string): Promise<string> => {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         invoke('get_file_content', { filePath }).then((data) => {
-            resolve(data as string)
+            if (typeof data === 'string') reject(data)
+
+            const content = String.fromCharCode(...(data as number[]))
+            resolve(content)
         })
     })
 }

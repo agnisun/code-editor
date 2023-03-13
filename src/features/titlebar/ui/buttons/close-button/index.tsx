@@ -7,6 +7,7 @@ export const CloseButton = () => {
 
     return (
         <IconButton
+            tabIndex={-1}
             onClick={handleOnClick}
             variant={'titlebar'}
             aria-label={'Close window'}

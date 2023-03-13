@@ -1,6 +1,9 @@
 use serde::{Deserialize, Serialize};
-use std::{fs};
 use std::path::Path;
+use std::fs;
+use std::io;
+use std::io::Read;
+use std::io::BufReader;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Project {
@@ -42,10 +45,9 @@ pub fn read_directory(dir_path: &str) -> Project {
             Ok(str) => str,
             Err(_error) => String::from("ERROR"),
         };
-        let path = dir_path.to_owned() + &name;
+        let path = dir_path.to_owned() + "/" + &name;
         let mut kind = String::from("file");
-        let mut parent = dir_path.to_owned();
-        parent.pop();
+        let parent = dir_path.to_owned();
         
         if entry_path.is_dir() {
             kind = String::from("directory");
@@ -80,7 +82,11 @@ pub fn read_directory(dir_path: &str) -> Project {
     }
 }
 
-pub fn read_file(path: &str) -> String {
-    let contents = fs::read_to_string(path).expect("ERROR");
-    contents
+pub fn read_file(path: &str) -> Vec<u8> {
+    let mut f = fs::File::open(&path).expect("no file found");
+    let metadata = fs::metadata(&path).expect("unable to read metadata");
+    let mut buffer = vec![0; metadata.len() as usize];
+    f.read(&mut buffer).expect("buffer overflow");
+
+    buffer
 }

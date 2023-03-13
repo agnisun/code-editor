@@ -15,6 +15,7 @@ export const PlusButton = () => {
 
     return (
         <IconButton
+            tabIndex={-1}
             variant={'toolsbar'}
             onClick={handleOnClick}
             icon={<Icon as={HiPlus} />}

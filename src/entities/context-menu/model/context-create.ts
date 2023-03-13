@@ -5,6 +5,7 @@ import { isFileExists } from '@shared/lib/is-file-exists'
 import { createDir, createFile } from '@shared/lib/filesys'
 import { IFileNode } from '@shared/types'
 import { getCurrentIndex } from '@entities/context-menu/lib/get-current-index'
+import { getDirectoryChildsLength } from '@entities/context-menu/lib/get-directory-childs-length'
 
 export const useContextCreate = () => {
     const [openedNodes, setOpenedNodes] = useAtom(openedNodesAtom)
@@ -25,12 +26,24 @@ export const useContextCreate = () => {
             }
 
             await (kind === 'file' ? createFile : createDir)(path)
-            let startIndex = (await getCurrentIndex(parent + '/', path)) + index
+            const currentIndex = await getCurrentIndex(parent, path)
 
-            while (openedNodes[startIndex + 1].depth > depth) startIndex++
+            const currentDepthNodes = openedNodes.filter((node, i) => {
+                return i >= index && node.depth === depth
+            })
+
+            let childNodesIndex = 0
+
+            for (let i = 0; i < currentIndex; i++) {
+                const node = currentDepthNodes[i]
+                if (node.kind === 'directory' && node.expanded) {
+                    childNodesIndex += getDirectoryChildsLength(openedNodes, node)
+                }
+            }
 
             setOpenedNodes((openedNodes) => {
-                openedNodes.splice(startIndex + 1, 0, entity)
+                openedNodes.splice(index + currentIndex + childNodesIndex + 1, 0, entity)
+
                 return openedNodes
             })
         },
