@@ -81,7 +81,7 @@ export const View: FC<ViewProps> = ({ directory, index, style = undefined }) => 
                 onContextMenu={isRenameOpen ? (e) => e.preventDefault() : handleOnContextMenu}
                 isResizing={isResizing}
                 isActive={contextEntity.path === path}
-                style={{ ...style, paddingLeft: `${depth ? depth * 20 : 5}px` }}
+                style={{ ...style, paddingLeft: `${depth ? depth * 25 : 5}px` }}
             >
                 <Flex alignItems={'center'} gap={'5px'}>
                     <Icon as={expanded ? HiChevronDown : HiChevronRight} />
