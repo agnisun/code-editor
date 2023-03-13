@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { useAtom } from 'jotai'
-import { isLoadingAtom, openedNodesAtom, projectAtom } from '@entities/source'
+import { historyTabsAtom, isLoadingAtom, openedNodesAtom, projectAtom, selectedFilesAtom } from '@entities/source'
 import { open } from '@tauri-apps/api/dialog'
 import { isHideAtom, navbarWidthAtom, prevNavbarWidthAtom } from '@entities/navbar'
 import { readDirectory } from '@shared/lib/filesys'
@@ -13,6 +13,8 @@ export const useTools = () => {
     const [isLoading, setIsLoading] = useAtom(isLoadingAtom)
     const [project, setProject] = useAtom(projectAtom)
     const [openedNodes, setOpenedNodes] = useAtom(openedNodesAtom)
+    const [, setHistoryTabs] = useAtom(historyTabsAtom)
+    const [, setSelectedFiles] = useAtom(selectedFilesAtom)
 
     const loadProject = useCallback(async () => {
         const selected = await open({
@@ -25,6 +27,8 @@ export const useTools = () => {
         const project = await readDirectory(selected as string)
         setProject(project)
         setOpenedNodes(formatDirectory(project))
+        setHistoryTabs([])
+        setSelectedFiles([])
         setIsLoading(false)
     }, [])
 
