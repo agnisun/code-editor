@@ -102,6 +102,8 @@ export const useContextRename = () => {
         setSelectedFiles((selectedFiles) => {
             return selectedFiles.map((file) => {
                 if (files.some((el) => el.path === file.path)) {
+                    if (path === file.path) file.name = newName
+
                     return updateCb(file) as IFile
                 }
 
@@ -122,6 +124,8 @@ export const useContextRename = () => {
         setHistoryTabs((historyTabs) => {
             return historyTabs.map((file) => {
                 if (files.some((el) => el.path === file.path)) {
+                    if (path === file.path) file.name = newName
+                    
                     return updateCb(file) as IFile
                 }
 
