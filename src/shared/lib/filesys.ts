@@ -21,6 +21,18 @@ export const readFile = (filePath: string): Promise<string> => {
     })
 }
 
+export const writeFile = (filePath: string, content: string): Promise<void> => {
+    return new Promise((resolve, reject) => {
+        invoke('write_file', { filePath, content }).then((message: unknown) => {
+            if (message === 'OK') {
+                resolve()
+            } else {
+                reject()
+            }
+        })
+    })
+}
+
 export const createFile = (filePath: string): Promise<void> => {
     return new Promise((resolve, reject) => {
         invoke('create_file', { filePath }).then((message: unknown) => {

@@ -63,9 +63,16 @@ fn delete_dir(dir_path: &str) -> String {
     }
 }
 
+#[tauri::command]
+fn write_file(file_path: &str, content: &str) -> String {
+    let result = fc::write_file(file_path, content);
+
+    result
+}
+
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![open_folder, get_file_content, create_file, rename_file, delete_file, create_dir, delete_dir])
+        .invoke_handler(tauri::generate_handler![open_folder, get_file_content, create_file, rename_file, delete_file, create_dir, delete_dir, write_file])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

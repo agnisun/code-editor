@@ -1,5 +1,7 @@
 import { EditorView } from 'codemirror'
 
+export type Extension = typeof baseStyleExtension
+
 export const baseStyleExtension = EditorView.theme({
     '&': {
         height: '100%',

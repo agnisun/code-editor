@@ -90,3 +90,13 @@ pub fn read_file(path: &str) -> Vec<u8> {
 
     buffer
 }
+
+pub fn write_file(path: &str, content: &str) -> String {
+    let file_path = Path::new(path);
+    let result = match fs::write(file_path, content) {
+        Ok(()) => String::from("OK"),
+        Err(_err) => String::from("ERROR")
+    };
+
+    result
+}
