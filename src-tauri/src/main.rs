@@ -1,73 +1,75 @@
 ﻿#![cfg_attr(
-    all(not(debug_assertions), target_os = "windows"),
-    windows_subsystem = "windows"
+all(not(debug_assertions), target_os = "windows"),
+windows_subsystem = "windows"
 )]
 
-mod fc;
-use std::{fs};
+#[path = "lib/mod.rs"]
+mod lib;
+mod file_sys;
+
 
 #[tauri::command]
 fn open_folder(dir_path: &str) -> String {
-    let files = fc::read_directory(&dir_path);
-    let files_str = match serde_json::to_string(&files) {
-        Ok(str) => str,
-        Err(error) => panic!("Problem opening the file: {:?}", error),
-    };
-
-    files_str
+    match file_sys::read_directory(&dir_path) {
+        Ok(project) => serde_json::to_string(&project).unwrap(),
+        Err(err) => lib::format_response(&err.to_string(), false)
+    }
 }
 
 #[tauri::command]
-fn get_file_content(file_path: &str) -> Vec<u8> {
-    let content = fc::read_file(file_path);
-    content
+fn get_file_content(file_path: &str) -> String {
+    match file_sys::read_file(file_path) {
+        Ok(content) => lib::format_response(&content, true),
+        Err(err) => lib::format_response(&err.to_string(), false)
+    }
 }
 
 #[tauri::command]
 fn create_file(file_path: &str) -> String {
-    match fs::File::create(file_path) {
-        Ok(_ok) => String::from("OK"),
-        Err(_err) => String::from("ERROR")
+    match file_sys::create_file(file_path) {
+        Ok(()) => lib::format_response("", true),
+        Err(err) => lib::format_response(&err.to_string(), false)
     }
 }
 
 #[tauri::command]
 fn rename_file(file_path: &str, new_file_path: &str) -> String {
-    match fs::rename(file_path, new_file_path) {
-        Ok(_ok) => String::from("OK"),
-        Err(_err) => String::from("ERROR")
+    match file_sys::rename_file(file_path, new_file_path) {
+        Ok(()) => lib::format_response("", true),
+        Err(err) => lib::format_response(&err.to_string(), false)
     }
 }
 
 #[tauri::command]
 fn delete_file(file_path: &str) -> String {
-    match fs::remove_file(file_path) {
-        Ok(_ok) => String::from("OK"),
-        Err(_err) => String::from("ERROR")
+    match file_sys::delete_file(file_path) {
+        Ok(()) => lib::format_response("", true),
+        Err(err) => lib::format_response(&err.to_string(), false)
     }
 }
 
 #[tauri::command]
 fn create_dir(dir_path: &str) -> String {
-    match fs::create_dir(dir_path) {
-        Ok(_ok) => String::from("OK"),
-        Err(_err) => String::from("ERROR")
+    match file_sys::create_dir(dir_path) {
+        Ok(()) => lib::format_response("", true),
+        Err(err) => lib::format_response(&err.to_string(), false)
     }
 }
 
 #[tauri::command]
 fn delete_dir(dir_path: &str) -> String {
-    match fs::remove_dir_all(dir_path) {
-        Ok(_ok) => String::from("OK"),
-        Err(_err) => String::from("ERROR")
+    match file_sys::delete_dir(dir_path) {
+        Ok(()) => lib::format_response("", true),
+        Err(err) => lib::format_response(&err.to_string(), false)
     }
 }
 
 #[tauri::command]
 fn write_file(file_path: &str, content: &str) -> String {
-    let result = fc::write_file(file_path, content);
-
-    result
+    match file_sys::write_file(file_path, content) {
+        Ok(()) => lib::format_response("", true),
+        Err(err) => lib::format_response(&err.to_string(), false)
+    }
 }
 
 fn main() {

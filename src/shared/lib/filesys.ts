@@ -1,10 +1,20 @@
 import { invoke } from '@tauri-apps/api'
 import { IProject } from '../types'
 
+interface Response {
+    status: boolean
+    data: string
+}
+
 export const readDirectory = (dirPath: string): Promise<IProject> => {
-    return new Promise((resolve) => {
-        invoke('open_folder', { dirPath }).then((data) => {
-            const project = JSON.parse((data as string).replaceAll('\\', '/').replaceAll('//', '/'))
+    return new Promise((resolve, reject) => {
+        invoke('open_folder', { dirPath }).then((result) => {
+            const resultParse = JSON.parse(result as string)
+
+            if (resultParse?.status) reject(resultParse.data)
+
+            const project = JSON.parse(JSON.stringify(resultParse).replaceAll('\\', '/').replaceAll('//', '/'))
+
             resolve(project)
         })
     })
@@ -12,83 +22,77 @@ export const readDirectory = (dirPath: string): Promise<IProject> => {
 
 export const readFile = (filePath: string): Promise<string> => {
     return new Promise((resolve, reject) => {
-        invoke('get_file_content', { filePath }).then((data) => {
-            if (typeof data === 'string') reject(data)
+        invoke('get_file_content', { filePath }).then((result) => {
+            const { status, data } = JSON.parse(result as string) as Response
 
-            const content = String.fromCharCode(...(data as number[]))
-            resolve(content)
+            if (status) resolve(data)
+            else reject(data)
         })
     })
 }
 
-export const writeFile = (filePath: string, content: string): Promise<void> => {
+export const writeFile = (filePath: string, content: string): Promise<void | string> => {
     return new Promise((resolve, reject) => {
-        invoke('write_file', { filePath, content }).then((message: unknown) => {
-            if (message === 'OK') {
-                resolve()
-            } else {
-                reject()
-            }
+        invoke('write_file', { filePath, content }).then((result) => {
+            const { status, data } = JSON.parse(result as string) as Response
+
+            if (status) resolve()
+            else reject(data)
         })
     })
 }
 
-export const createFile = (filePath: string): Promise<void> => {
+export const createFile = (filePath: string): Promise<void | string> => {
     return new Promise((resolve, reject) => {
-        invoke('create_file', { filePath }).then((message: unknown) => {
-            if (message === 'OK') {
-                resolve()
-            } else {
-                reject()
-            }
+        invoke('create_file', { filePath }).then((result) => {
+            const { status, data } = JSON.parse(result as string) as Response
+
+            if (status) resolve()
+            else reject(data)
         })
     })
 }
 
 export const renameFile = (filePath: string, newFilePath: string): Promise<void> => {
     return new Promise((resolve, reject) => {
-        invoke('rename_file', { filePath, newFilePath }).then((message: unknown) => {
-            if (message === 'OK') {
-                resolve()
-            } else {
-                reject()
-            }
+        invoke('rename_file', { filePath, newFilePath }).then((result) => {
+            const { status, data } = JSON.parse(result as string) as Response
+
+            if (status) resolve()
+            else reject(data)
         })
     })
 }
 
-export const deleteFile = (filePath: string): Promise<string> => {
+export const deleteFile = (filePath: string): Promise<void | string> => {
     return new Promise((resolve, reject) => {
-        invoke('delete_file', { filePath }).then((message: unknown) => {
-            if (message === 'OK') {
-                resolve(message)
-            } else {
-                reject(message)
-            }
+        invoke('delete_file', { filePath }).then((result) => {
+            const { status, data } = JSON.parse(result as string) as Response
+
+            if (status) resolve()
+            else reject(data)
         })
     })
 }
 
 export const createDir = (dirPath: string): Promise<void> => {
     return new Promise((resolve, reject) => {
-        invoke('create_dir', { dirPath }).then((message: unknown) => {
-            if (message === 'OK') {
-                resolve()
-            } else {
-                reject()
-            }
+        invoke('create_dir', { dirPath }).then((result) => {
+            const { status, data } = JSON.parse(result as string) as Response
+
+            if (status) resolve()
+            else reject(data)
         })
     })
 }
 
-export const deleteDir = (dirPath: string): Promise<string> => {
+export const deleteDir = (dirPath: string): Promise<void | string> => {
     return new Promise((resolve, reject) => {
-        invoke('delete_dir', { dirPath }).then((message: unknown) => {
-            if (message === 'OK') {
-                resolve(message)
-            } else {
-                reject(message)
-            }
+        invoke('delete_dir', { dirPath }).then((result) => {
+            const { status, data } = JSON.parse(result as string) as Response
+
+            if (status) resolve()
+            else reject(data)
         })
     })
 }

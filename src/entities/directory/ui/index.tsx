@@ -56,6 +56,7 @@ export const View: FC<ViewProps> = ({ directory, index, style = undefined }) => 
                     index
                 )
             } catch (e) {
+                console.error(e)
                 setInput(name)
                 setIsError(false)
             }

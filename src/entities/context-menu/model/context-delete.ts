@@ -15,7 +15,7 @@ export const useDeleteFile = (onClose: () => void) => {
             })
             onClose()
         } catch (e) {
-            console.log(e)
+            throw new Error(e as string)
         }
     }, [])
 
@@ -41,7 +41,7 @@ export const useDeleteFile = (onClose: () => void) => {
                     return start.concat(end)
                 })
             } catch (e) {
-                console.log(e)
+                throw new Error(e as string)
             }
         },
         [openedNodes]

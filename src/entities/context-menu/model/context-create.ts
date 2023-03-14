@@ -25,27 +25,31 @@ export const useContextCreate = () => {
                 throw new Error('This name is already exists')
             }
 
-            await (kind === 'file' ? createFile : createDir)(path)
-            const currentIndex = await getCurrentIndex(parent, path)
+            try {
+                await (kind === 'file' ? createFile : createDir)(path)
+                const currentIndex = await getCurrentIndex(parent, path)
 
-            const currentDepthNodes = openedNodes.filter((node, i) => {
-                return i >= index && node.depth === depth
-            })
+                const currentDepthNodes = openedNodes.filter((node, i) => {
+                    return i >= index && node.depth === depth
+                })
 
-            let childNodesIndex = 0
+                let childNodesIndex = 0
 
-            for (let i = 0; i < currentIndex; i++) {
-                const node = currentDepthNodes[i]
-                if (node.kind === 'directory' && node.expanded) {
-                    childNodesIndex += getDirectoryChildsLength(openedNodes, node)
+                for (let i = 0; i < currentIndex; i++) {
+                    const node = currentDepthNodes[i]
+                    if (node.kind === 'directory' && node.expanded) {
+                        childNodesIndex += getDirectoryChildsLength(openedNodes, node)
+                    }
                 }
+
+                setOpenedNodes((openedNodes) => {
+                    openedNodes.splice(index + currentIndex + childNodesIndex + 1, 0, entity)
+
+                    return openedNodes
+                })
+            } catch (e) {
+                throw new Error(e as string)
             }
-
-            setOpenedNodes((openedNodes) => {
-                openedNodes.splice(index + currentIndex + childNodesIndex + 1, 0, entity)
-
-                return openedNodes
-            })
         },
         [openedNodes]
     )

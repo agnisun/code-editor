@@ -58,9 +58,13 @@ export const View = () => {
     const name = isFolder ? 'Folder' : 'File'
     useOutsideClick({ ref: elementRef, handler: confirmModal.isOpen || createModal.isOpen ? undefined : onClose })
 
-    const handleOnDelete = () => {
-        if (isFolder) onDeleteDir(contextEntity)
-        else onDeleteFile({ path })
+    const handleOnDelete = async () => {
+        try {
+            if (isFolder) await onDeleteDir(contextEntity)
+            else await onDeleteFile({ path })
+        } catch (e) {
+            console.error(e)
+        }
         onClose()
     }
 

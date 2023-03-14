@@ -8,7 +8,7 @@ import { php } from '@codemirror/lang-php'
 import { xml } from '@codemirror/lang-xml'
 import { rust } from '@codemirror/lang-rust'
 import { LanguageSupport } from '@codemirror/language'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { basicSetup } from 'codemirror'
 import { EditorView, keymap } from '@codemirror/view'
 import { indentWithTab } from '@codemirror/commands'
@@ -52,30 +52,38 @@ export const useCodeMirror = (file: IFile, extensions: Extension[]) => {
     const [theme] = useAtom(themeAtom)
     const isRendered = useRef<boolean>(false)
     const editorRef = useRef<EditorView | null>(null)
+    const [error, setError] = useState<string>('')
 
     const updateEditorContent = async () => {
         const element = document.getElementById(path)
 
         if (element && !isRendered.current) {
             isRendered.current = true
-            const content = await readFile(path)
-            const baseExtensions = [
-                basicSetup,
-                theme.codemirror,
-                baseStyleExtension,
-                keymap.of([indentWithTab]),
-                ...extensions,
-            ]
-            const ext = name.slice(name.lastIndexOf('.') + 1)
-            const lang = language[ext]
 
-            if (lang) baseExtensions.push(lang())
+            try {
+                const content = await readFile(path)
+                const baseExtensions = [
+                    basicSetup,
+                    theme.codemirror,
+                    baseStyleExtension,
+                    keymap.of([indentWithTab]),
+                    ...extensions,
+                ]
+                const ext = name.slice(name.lastIndexOf('.') + 1)
+                const lang = language[ext]
 
-            editorRef.current = new EditorView({
-                doc: content,
-                extensions: baseExtensions,
-                parent: element,
-            })
+                if (lang) baseExtensions.push(lang())
+
+                editorRef.current = new EditorView({
+                    doc: content,
+                    extensions: baseExtensions,
+                    parent: element,
+                })
+                setError('')
+            } catch (e) {
+                console.error(e)
+                setError(e as string)
+            }
         }
     }
 
@@ -86,4 +94,6 @@ export const useCodeMirror = (file: IFile, extensions: Extension[]) => {
             editorRef.current?.destroy()
         }
     }, [])
+
+    return { error }
 }

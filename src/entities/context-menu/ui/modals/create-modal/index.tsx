@@ -56,7 +56,7 @@ export const CreateModal: FC<CreateModalProps> = ({ isOpen, onConfirm, onClose, 
             await onCreate(newNode, index as number)
             onConfirm()
         } catch (e) {
-            console.log(e)
+            console.error(e)
         } finally {
             setInput('')
         }

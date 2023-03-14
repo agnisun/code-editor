@@ -52,6 +52,7 @@ export const View: FC<ViewProps> = ({ file, index, style = undefined }) => {
             try {
                 await onRename({ ...file, newPath: renamePathByNewName(path, inputValue), newName: inputValue }, index)
             } catch (e) {
+                console.error(e)
                 setInput(name)
                 setIsError(false)
             }

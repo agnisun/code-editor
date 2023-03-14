@@ -9,18 +9,22 @@ export const useDirectories = () => {
     const [openedNodes, setOpenedNodes] = useAtom(openedNodesAtom)
 
     const expandDirectory = useCallback(async (directory: IDirectory, index: number) => {
-        const children = await readDirectory(directory.path)
-        setOpenedNodes((openedNodes) => {
-            openedNodes[index].expanded = true
-            const start = openedNodes.slice(0, index + 1)
-            const end = openedNodes.slice(index + 1)
-            const formattedChildren = formatDirectory(children, (file) => ({
-                ...file,
-                depth: directory.depth + 1,
-            }))
+        try {
+            const children = await readDirectory(directory.path)
+            setOpenedNodes((openedNodes) => {
+                openedNodes[index].expanded = true
+                const start = openedNodes.slice(0, index + 1)
+                const end = openedNodes.slice(index + 1)
+                const formattedChildren = formatDirectory(children, (file) => ({
+                    ...file,
+                    depth: directory.depth + 1,
+                }))
 
-            return start.concat(formattedChildren, end)
-        })
+                return start.concat(formattedChildren, end)
+            })
+        } catch (e) {
+            throw new Error(e as string)
+        }
     }, [])
 
     const collapseDirectory = useCallback(

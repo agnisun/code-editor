@@ -24,12 +24,17 @@ export const useTools = () => {
         if (!selected) return
 
         if (!isLoading) setIsLoading(true)
-        const project = await readDirectory(selected as string)
-        setProject(project)
-        setOpenedNodes(formatDirectory(project))
-        setHistoryTabs([])
-        setSelectedFiles([])
-        setIsLoading(false)
+        try {
+            const project = await readDirectory(selected as string)
+            setProject(project)
+            setOpenedNodes(formatDirectory(project))
+        } catch (e) {
+            console.error(e)
+        } finally {
+            setHistoryTabs([])
+            setSelectedFiles([])
+            setIsLoading(false)
+        }
     }, [])
 
     const collapseAllDirectories = useCallback(async () => {
