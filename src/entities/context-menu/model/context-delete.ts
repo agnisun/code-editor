@@ -1,18 +1,24 @@
 import { useCallback } from 'react'
 import { deleteDir, deleteFile } from '@shared/lib/filesys'
 import { useAtom } from 'jotai'
-import { openedNodesAtom } from '@entities/source'
+import { historyTabsAtom, openedNodesAtom, selectedFilesAtom } from '@entities/source'
 import { IContextEntity } from '@entities/context-menu/model/context-menu'
 
 export const useDeleteFile = (onClose: () => void) => {
     const [openedNodes, setOpenedNodes] = useAtom(openedNodesAtom)
+    const [, setSelectedFiles] = useAtom(selectedFilesAtom)
+    const [, setHistoryTabs] = useAtom(historyTabsAtom)
 
     const onDeleteFile = useCallback(async ({ path }: { path: string }) => {
+        const deleteFromNodes = <T extends { path: string }>(nodes: T[]) => {
+            return nodes.filter((node) => node.path !== path)
+        }
+
         try {
             await deleteFile(path)
-            setOpenedNodes((nodes) => {
-                return nodes.filter((node) => node.path !== path)
-            })
+            setOpenedNodes((nodes) => deleteFromNodes(nodes))
+            setSelectedFiles((nodes) => deleteFromNodes(nodes))
+            setHistoryTabs((nodes) => deleteFromNodes(nodes))
             onClose()
         } catch (e) {
             throw new Error(e as string)

@@ -18,6 +18,7 @@ export const View = () => {
             alignItems={'center'}
             fontSize={'.9rem'}
             bg={background}
+            data-tauri-drag-region
         >
             <Box px={'15px'}>Code Editor</Box>
             <Flex justifyContent={'space-between'} alignItems={'center'}>

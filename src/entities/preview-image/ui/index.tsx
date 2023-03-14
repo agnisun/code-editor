@@ -1,4 +1,4 @@
-import { Flex } from '@chakra-ui/react'
+import { Box, Flex } from '@chakra-ui/react'
 import { useFiles } from '@entities/file'
 import { FC, useRef } from 'react'
 import { IFile } from '@shared/types'
@@ -17,7 +17,18 @@ export const View: FC<ViewProps> = ({ file }) => {
 
     return (
         <Flex h={height} visibility={visibility} alignItems={'center'} justifyContent={'center'}>
-            <img ref={imgRef} src={convertFileSrc(file.path.slice(0, -1))} alt={file.name} />
+            <Flex w={'100%'} h={'100%'} justifyContent={'center'}>
+                <Box
+                    as={'img'}
+                    p={'10px'}
+                    maxW={'800px'}
+                    h={'auto'}
+                    objectFit={'contain'}
+                    ref={imgRef}
+                    src={convertFileSrc(file.path)}
+                    alt={file.name}
+                />
+            </Flex>
         </Flex>
     )
 }

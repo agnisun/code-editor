@@ -6,7 +6,7 @@
     "distDir": "../dist"
   },
   "package": {
-    "productName": "text-editor",
+    "productName": "code-editor",
     "version": "0.0.0"
   },
   "tauri": {
@@ -58,7 +58,8 @@
         "height": 600,
         "resizable": true,
         "title": "text-editor",
-        "width": 800
+        "width": 1024,
+        "decorations": false
       }
     ]
   }
