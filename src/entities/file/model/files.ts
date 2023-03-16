@@ -14,6 +14,7 @@ export const useFiles = () => {
                 kind: 'file',
                 depth: 0,
                 path: '',
+                parent: ''
             },
         [historyTabs]
     )

@@ -7,7 +7,7 @@ import { Navbar } from '@widgets/navbar'
 import { Loader } from '@features/loader'
 import { Editor } from '@widgets/editor'
 
-if (!process.env.NODE_ENV) {
+if (!process.env.TAURI_DEBUG) {
     document.addEventListener('contextmenu', (event) => event.preventDefault())
 }
 

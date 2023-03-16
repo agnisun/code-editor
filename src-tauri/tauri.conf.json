@@ -28,7 +28,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "com.code-editor-project",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -43,7 +43,13 @@
       "windows": {
         "certificateThumbprint": null,
         "digestAlgorithm": "sha256",
-        "timestampUrl": ""
+        "timestampUrl": "",
+        "webviewInstallMode": {
+          "type": "offlineInstaller"
+        },
+        "wix": {
+          "language": ["en-US", "ru-RU"]
+        }
       }
     },
     "security": {
