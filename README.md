@@ -1,7 +1,21 @@
-# Tauri + React + Typescript
+# Code Editor
 
-This template should help get you started developing with Tauri, React and Typescript in Vite.
+is a simple and lightweight code editor that allows you to edit and save your code. It is built using Tauri, Typescript, React, and CodeMirror.
 
-## Recommended IDE Setup
+## Features
 
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+- Multiple tabs for editing multiple files.
+- Editing file content.
+- Showing folder structure.
+- Create new files and rename or delete existing files.
+- View images.
+- Switch between light and dark themes for optimal viewing.
+
+## Getting Started
+To get started with Code Editor, follow these steps:
+1. `git clone https://github.com/agnisun/code-editor.git`
+2. `npm install`
+3. `npm run tauri dev`
+
+## Demo
+Download: https://github.com/agnisun/code-editor/releases/download/Latest/code-editor_0.0.0_x64_en-US.msi
