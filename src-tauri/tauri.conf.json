@@ -63,7 +63,7 @@
         "fullscreen": false,
         "height": 600,
         "resizable": true,
-        "title": "text-editor",
+        "title": "code-editor",
         "width": 1024,
         "decorations": false
       }
