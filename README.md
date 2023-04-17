@@ -1,3 +1,5 @@
+![code-editor-demo](https://user-images.githubusercontent.com/82887781/232541799-ee4cf3bf-fbd4-4d9a-a67b-2725c1b61ec7.gif)
+
 # Code Editor
 
 it's a simple and lightweight code editor that allows you to edit and save your code. It is built using Tauri, Typescript, React, and CodeMirror.
